@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Rafael Fernandes - Using C/C++ in iOS</title>
+  <meta charset="utf-8" />
+  <!-- link para outros arquivos do thema (css e javascript) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans%7CRoboto+Mono%7CUbuntu+Condensed" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/theme/site.css">
+  <link rel="stylesheet" type="text/css" href="/theme/codehighlight.css">
+	
+
+    <meta name="description" content="A simple example of how to interface your C++ code with iOS." />
+
+    <meta name="tags" content="programação" />
+    <meta name="tags" content="C++" />
+    <meta name="tags" content="IOS" />
+
+</head>
+<body>
+  <header id="site_header" class="background  ">
+    <div class="sitewidth">
+    <h6><a href="/">Rafael Fernandes</a></h6>
+    <nav id="topmenu"><ul>
+      <li class="active"><a href="/category/artigos.html">Artigos</a></li>
+      <li><a href="/category/projetos.html">Projetos</a></li>
+      <li><a href="/about/">Sobre</a></li>
+    </ul></nav><!-- /#menu -->
+    </div>
+  </header>
+
+  <!-- Page content -->
+<main class="article_page">
+  <article>
+    <h1>Using C/C++ in iOS</h1>
+    <aside class="translations">
+<p>Translations:</p>
+<ul>
+    <li><a href="/artigos/objc_cpp_ios/">pt</a></li>
+</ul>
+</aside>
+
+    <p>When I was developing a OpenGL ES based mobile application, in such a way that it would be portable
+for the other mobile systems, I had to choose what language to use. For iOS, using Objective-C would
+be the better option, most APIs are Objective-C exclusive, but then I would be tied to Apple's OS.</p>
+<p>Fortunately, it's very easy to make Objective-C call C/C++ code, so I only needed to write Objective-C code to
+acess the iOS API.</p>
+<h2>iOS Project Setup</h2>
+<p>With a blank XCode iOS project, just making a GLKit ViewController is all that's needed to
+make the OpenGL code draw at the screen.</p>
+<p>To call the C++ code where needed, to respond to system events, I had Objective-C code that would
+import and call C code, that was defined in a C++ file.</p>
+<p>In my case, I needed to respond to the following events:</p>
+<ul>
+<li><code>AppDelegate</code>:<ul>
+<li><code>didFinishLauchWithOptions</code>: Called when iOS finishes loading the application;</li>
+<li><code>applicationWillResignActive</code>: Called when the application is not the active app;</li>
+<li><code>applicationDidEnterBackground</code>: Called when the application will be put in stand-by mode, so we need to free resources;</li>
+<li><code>applicationDidBecomeActive</code>: Called when the application is the active app again;</li>
+</ul>
+</li>
+<li><code>ViewController</code>:<ul>
+<li><code>viewDidLoad</code>: Called when the GLKView will be displayed for the first time;</li>
+<li><code>update</code> e <code>drawInRect</code>: Called once a frame, for screen/logic update; </li>
+<li>eventos <code>Touch</code>: Called on touch events;</li>
+</ul>
+</li>
+</ul>
+<p>To call the C++ code when these events happen, just make a simple header file:</p>
+<div class="highlight"><pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stddef.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#ifdef __cplusplus</span>
+<span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="p">{</span>
+<span class="cp">#endif</span>
+
+<span class="cp">#define TOUCH_START  0</span>
+<span class="cp">#define TOUCH_MOVE   1</span>
+<span class="cp">#define TOUCH_END    2</span>
+<span class="cp">#define TOUCH_CANCEL 3</span>
+<span class="c1">// didFinishLauchWithOptions</span>
+<span class="kt">void</span> <span class="n">GAME_startup</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="c1">// viewDidLoad</span>
+<span class="kt">void</span> <span class="nf">GAME_init</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">float</span> <span class="n">scale</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">tablet</span><span class="p">);</span>
+<span class="c1">// applicationWillResignActive</span>
+<span class="kt">void</span> <span class="nf">GAME_lostFocus</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="c1">// applicationDidBecomeActive</span>
+<span class="kt">void</span> <span class="nf">GAME_restoredFocus</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="c1">// applicationDidEnterBackground </span>
+<span class="kt">void</span> <span class="nf">GAME_saveState</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span> 
+<span class="c1">// drawInRect</span>
+<span class="kt">void</span> <span class="nf">GAME_update</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span> 
+<span class="c1">// Touch</span>
+<span class="kt">void</span> <span class="nf">GAME_processTouch</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">id</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">action</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">x</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">y</span><span class="p">);</span>
+
+<span class="cp">#ifdef __cplusplus</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+</pre></div>
+
+
+<h2>Objective-C side</h2>
+<p>At the Objective-C side, it could not be easier: just import the header file and call the correct functions.</p>
+<h3>AppDelegate</h3>
+<p>In the AppDelegate's implementation, we don't need to do much besides call the C++ functions. I must
+warn you that, at this moment, we may not have an active OpenGL context so we must only code for
+the basic functions of the system, like saving files or freeing memory.</p>
+<div class="highlight"><pre><span></span><span class="cp">#import &quot;AppDelegate.h&quot;</span>
+<span class="cp">#import &quot;header_cpp.h&quot;</span>
+
+<span class="err">@</span><span class="n">interface</span> <span class="n">IOS_AppDelegate</span> <span class="p">()</span>
+
+<span class="err">@</span><span class="n">end</span>
+
+<span class="err">@</span><span class="n">implementation</span> <span class="n">IOS_AppDelegate</span>
+
+
+<span class="o">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nl">application</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="nl">didFinishLaunchingWithOptions</span><span class="p">:(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="n">launchOptions</span> <span class="p">{</span>
+    <span class="n">GAME_startup</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">applicationWillResignActive</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="p">{</span>
+    <span class="n">GAME_lostFocus</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">applicationDidEnterBackground</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="p">{</span>
+    <span class="n">GAME_saveState</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">applicationWillEnterForeground</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">applicationDidBecomeActive</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="p">{</span>
+    <span class="n">GAME_restoredFocus</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">applicationWillTerminate</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="n">application</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="err">@</span><span class="n">end</span>
+</pre></div>
+
+
+<h3>ViewController</h3>
+<p>In our ViewController.m we have information about our viewport, touches that the user did, and
+many other information, so we have to prepare the data for the C++ functions, and make sure
+we have a valid OpenGL context.</p>
+<div class="highlight"><pre><span></span><span class="cp">#import &quot;ViewController.h&quot;</span>
+<span class="cp">#import &quot;header_cpp.h&quot;</span>
+
+<span class="err">@</span><span class="n">interface</span> <span class="n">IOS_ViewController</span> <span class="p">()</span> <span class="p">{}</span>
+<span class="err">@</span><span class="n">end</span>
+
+<span class="err">@</span><span class="n">implementation</span> <span class="n">IOS_ViewController</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+    <span class="c1">// setup OpenGL ES 2.0</span>
+    <span class="n">EAGLContext</span><span class="o">*</span> <span class="n">ctx</span> <span class="o">=</span> <span class="p">[[</span><span class="n">EAGLContext</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithAPI</span><span class="p">:</span><span class="n">kEAGLRenderingAPIOpenGLES2</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ctx</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="err">@</span><span class="s">&quot;Context OpenGL error.&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">GLKView</span><span class="o">*</span> <span class="n">view</span> <span class="o">=</span> <span class="p">(</span><span class="n">GLKView</span><span class="o">*</span><span class="p">)</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">;</span>
+    <span class="n">view</span><span class="p">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">ctx</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">EAGLContext</span> <span class="nl">setCurrentContext</span><span class="p">:</span> <span class="n">ctx</span><span class="p">];</span>
+
+    <span class="c1">// viewport setup</span>
+    <span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">w</span> <span class="o">=</span> <span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">s</span> <span class="o">=</span> <span class="n">view</span><span class="p">.</span><span class="n">contentScaleFactor</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">tablet</span> <span class="o">=</span> <span class="n">UI_USER_INTERFACE_IDIOM</span><span class="p">()</span> <span class="o">==</span> <span class="n">UIUserInterfaceIdiomPad</span><span class="p">;</span>
+    <span class="n">GAME_init</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">tablet</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">didReceiveMemoryWarning</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="n">didReceiveMemoryWarning</span><span class="p">];</span>
+    <span class="c1">// Dispose of any resources that can be recreated.</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma MARK -- GLKView</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">update</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">glkView</span><span class="p">:(</span><span class="n">GLKView</span> <span class="o">*</span><span class="p">)</span><span class="n">view</span> <span class="nl">drawInRect</span><span class="p">:(</span><span class="n">CGRect</span><span class="p">)</span><span class="n">rect</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">[</span><span class="n">EAGLContext</span> <span class="n">currentContext</span><span class="p">]</span> <span class="o">!=</span> <span class="n">view</span><span class="p">.</span><span class="n">context</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">EAGLContext</span> <span class="nl">setCurrentContext</span><span class="p">:</span> <span class="n">view</span><span class="p">.</span><span class="n">context</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">GAME_update</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma MARK -- touch</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">touchesBegan</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="n">touches</span> <span class="nl">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="n">event</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nl">touchesBegan</span><span class="p">:</span><span class="n">touches</span> <span class="nl">withEvent</span><span class="p">:</span><span class="n">event</span><span class="p">];</span>
+    <span class="n">GLKView</span><span class="o">*</span> <span class="n">view</span> <span class="o">=</span> <span class="p">(</span><span class="n">GLKView</span><span class="o">*</span><span class="p">)</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">UITouch</span> <span class="o">*</span> <span class="n">t</span> <span class="n">in</span> <span class="n">touches</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CGPoint</span> <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="nl">locationInView</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">];</span>
+        <span class="n">GAME_processTouch</span><span class="p">((</span><span class="kt">size_t</span><span class="p">)</span><span class="n">t</span><span class="p">,</span> <span class="n">TOUCH_START</span><span class="p">,</span> <span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">touchesMoved</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="n">touches</span> <span class="nl">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="n">event</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nl">touchesMoved</span><span class="p">:</span><span class="n">touches</span> <span class="nl">withEvent</span><span class="p">:</span><span class="n">event</span><span class="p">];</span>
+    <span class="n">GLKView</span><span class="o">*</span> <span class="n">view</span> <span class="o">=</span> <span class="p">(</span><span class="n">GLKView</span><span class="o">*</span><span class="p">)</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">UITouch</span> <span class="o">*</span> <span class="n">t</span> <span class="n">in</span> <span class="n">touches</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CGPoint</span> <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="nl">locationInView</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">];</span>
+        <span class="n">GAME_processTouch</span><span class="p">((</span><span class="kt">size_t</span><span class="p">)</span><span class="n">t</span><span class="p">,</span> <span class="n">TOUCH_MOVE</span><span class="p">,</span> <span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">touchesEnded</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="n">touches</span> <span class="nl">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="n">event</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nl">touchesEnded</span><span class="p">:</span><span class="n">touches</span> <span class="nl">withEvent</span><span class="p">:</span><span class="n">event</span><span class="p">];</span>
+    <span class="n">GLKView</span><span class="o">*</span> <span class="n">view</span> <span class="o">=</span> <span class="p">(</span><span class="n">GLKView</span><span class="o">*</span><span class="p">)</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">UITouch</span> <span class="o">*</span> <span class="n">t</span> <span class="n">in</span> <span class="n">touches</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CGPoint</span> <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="nl">locationInView</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">];</span>
+        <span class="n">GAME_processTouch</span><span class="p">((</span><span class="kt">size_t</span><span class="p">)</span><span class="n">t</span><span class="p">,</span> <span class="n">TOUCH_END</span><span class="p">,</span> <span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">touchesCancelled</span><span class="p">:(</span><span class="n">NSSet</span> <span class="o">*</span><span class="p">)</span><span class="n">touches</span> <span class="nl">withEvent</span><span class="p">:(</span><span class="n">UIEvent</span> <span class="o">*</span><span class="p">)</span><span class="n">event</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nl">touchesCancelled</span><span class="p">:</span><span class="n">touches</span> <span class="nl">withEvent</span><span class="p">:</span><span class="n">event</span><span class="p">];</span>
+    <span class="n">GLKView</span><span class="o">*</span> <span class="n">view</span> <span class="o">=</span> <span class="p">(</span><span class="n">GLKView</span><span class="o">*</span><span class="p">)</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">UITouch</span> <span class="o">*</span> <span class="n">t</span> <span class="n">in</span> <span class="n">touches</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CGPoint</span> <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="nl">locationInView</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">];</span>
+        <span class="n">GAME_processTouch</span><span class="p">((</span><span class="kt">size_t</span><span class="p">)</span><span class="n">t</span><span class="p">,</span> <span class="n">TOUCH_CANCEL</span><span class="p">,</span> <span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">p</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="err">@</span><span class="n">end</span>
+</pre></div>
+
+
+<h2>Conclusion</h2>
+<p>Now we just need to implement our C++ functions in a <code>.cpp</code> file and we're done!</p>
+<p>Another thing I had to do was some way to get the proper filename of a file in my app,
+to load textures, sounds and other resource using STL streams.</p>
+<p>Using <code>CoreFoundation</code>, a set of system functions available for C, we can do it without much trouble: </p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CoreFoundation/CoreFoundation.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#define BUF_SIZE 1024</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getFilePath</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">filename</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="n">BUF_SIZE</span><span class="p">];</span>
+    <span class="k">auto</span> <span class="n">bundle</span> <span class="o">=</span> <span class="n">CFBundleGetMainBundle</span><span class="p">();</span>
+    <span class="k">auto</span> <span class="n">str</span> <span class="o">=</span> <span class="n">CFStringCreateWithCString</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">filename</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">kCFStringEncodingUTF8</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">url</span> <span class="o">=</span> <span class="n">CFBundleCopyResourceURL</span><span class="p">(</span><span class="n">bundle</span><span class="p">,</span><span class="n">str</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">url</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="k">return</span> <span class="p">{</span><span class="s">&quot;&quot;</span><span class="p">};</span>
+    <span class="n">CFURLGetFileSystemRepresentation</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="p">(</span><span class="n">UInt8</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">,</span> <span class="n">BUF_SIZE</span><span class="p">);</span>
+    <span class="n">CFRelease</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">buffer</span><span class="p">};</span>
+<span class="p">}</span>
+</pre></div>
+    <footer class="article_info">
+      <summary>Informações do artigo:</summary>
+      <p><time class="published" datetime="2015-12-04T00:00:00-02:00">
+        Publicado em: sex 04 dezembro 2015
+      </time></p>
+      <address class="vcard author">
+        Autor:             <a href="/author/rafael-fernandes.html">Rafael Fernandes</a>
+      </address>
+      <p class="category">
+          Categoria: <a href="/category/artigos.html">Artigos</a>
+      </p>
+      <p class="tags">
+          Tags:
+              <a href="/tag/programacao.html">programação</a>
+              <a href="/tag/c.html">C++</a>
+              <a href="/tag/ios.html">IOS</a>
+      </p>
+      <p class="extrainfo">Permalink: /artigos/objc_cpp_ios/en.html</p>
+    </footer><!-- /.post-info -->
+  </article>
+</main>
+
+  <footer id="site_footer" class="background">
+    <p>
+      <a href="http://twitter.com/ragatol" rel="bookmark"><img src="https://twitter.com/favicon.ico"> twitter</a> 
+      <a href="http://github.com/ragatol" rel="bookmark"><img src="https://github.com/favicon.ico"> github</a>
+    </p>
+    <p>&copy; 2016 Rafael Fernandes</p>
+  </footer><!-- /#contentinfo -->
+</body>
+</html>

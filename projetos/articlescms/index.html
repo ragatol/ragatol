@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <title>Rafael Fernandes - ArticlesCMS</title>
+  <meta charset="utf-8" />
+  <!-- link para outros arquivos do thema (css e javascript) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans%7CRoboto+Mono%7CUbuntu+Condensed" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/theme/site.css">
+  <link rel="stylesheet" type="text/css" href="/theme/codehighlight.css">
+	
+
+    <meta name="description" content="ArticlesCMS é um sistema de gerenciamento de conteúdo multi-idiomas para blogs e websites pessoais, focado na simplicidade e facilidade de utilização em conjunto com o próprio código PHP do desenvolvedor." />
+
+    <meta name="tags" content="Programação" />
+    <meta name="tags" content="PHP" />
+    <meta name="tags" content="Código Aberto" />
+
+</head>
+<body>
+  <header id="site_header" class="background  ">
+    <div class="sitewidth">
+    <h6><a href="/">Rafael Fernandes</a></h6>
+    <nav id="topmenu"><ul>
+      <li><a href="/category/artigos.html">Artigos</a></li>
+      <li class="active"><a href="/category/projetos.html">Projetos</a></li>
+      <li><a href="/about/">Sobre</a></li>
+    </ul></nav><!-- /#menu -->
+    </div>
+  </header>
+
+  <!-- Page content -->
+<main class="article_page">
+  <article>
+    <h1>ArticlesCMS</h1>
+    <aside class="translations">
+<p>Translations:</p>
+<ul>
+    <li><a href="/projetos/articlescms/en.html">en</a></li>
+</ul>
+</aside>
+
+    <p>ArticlesCMS é um sistema de gerenciamento de conteúdo multi-idiomas para blogs e websites pessoais,
+focado na simplicidade e facilidade de utilização em conjunto com o próprio código PHP do desenvolvedor.</p>
+<p>E, obviamente, este site usa este sistema. 😉</p>
+<h2>Por que mais um CMS?</h2>
+<p>Este sistema foi criado para atender os seguintes requisitos que eu considero essenciais em meus projetos:</p>
+<ul>
+<li>Simplicidade de uso em código próprio para prototipagem rápida;</li>
+<li>Velocidade de processamento e baixo uso de recursos;</li>
+<li>Seleção automática de conteúdo baseado no idioma visitante sem complicações;</li>
+</ul>
+<p>A maioria dos sistemas de gerenciamento de conteúdo atuais, por serem grandes e "completos", não permitem um uso simples no meu próprio
+código, não são muito rápidos e utilizam muitos recursos mesmo para os sites/blogs mais simples.</p>
+<p>Além do mais, como pretendia fazer meu site acessível tanto para quem entende Português quanto Inglês, apenas
+alguns poucos sistemas de gerenciamento de conteúdo dão suporte a separação de conteúdo por idioma, e quando dão, não atendem as
+outras duas exigências minhas.</p>
+<h2>Características</h2>
+<p>O sistema ArticlesCMS é bem simples e é principalmente utilizado apenas como esqueleto para seu projeto de site ou blog.
+As principais características são:</p>
+<ul>
+<li>Conteúdo organizado em estrutura de pastas;</li>
+<li>Meta-dados das categorias e artigos podem ser extraídos de simples arquivos .json de uma estrutura
+    de pastas criada pelo desenvolvedor, removendo a necessidade de um sistema de gerenciamento do banco de dados.</li>
+<li>É possível utilizar qualquer banco de dados disponível para PDO; SQLite altamente recomendável para sites pequenos.</li>
+<li>Filtragem e listagem fácil de categorias ou artigos utilizando <code>Generator</code> como princípio.</li>
+</ul>
+<p>Futuramente uma página de administração será desenvolvida para simplificar o gerenciamento do conteúdo do site,
+especialmente para sites que precisam de adicionar ou modificar seu conteúdo de forma mais integrada.</p>
+<h2>Exemplos</h2>
+<p>Listando categorias:</p>
+<div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">include</span> <span class="s2">&quot;articles.php&quot;</span><span class="p">;</span>
+
+<span class="nv">$db</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Articles\DataBase</span><span class="p">(</span><span class="s2">&quot;site.json&quot;</span><span class="p">);</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$db</span><span class="o">-&gt;</span><span class="na">categories</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$category</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="nv">$category</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Listando os 10 artigos mais recentes da categoria "tutorials":</p>
+<div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">include</span> <span class="s2">&quot;articles.php&quot;</span><span class="p">;</span>
+
+<span class="nv">$db</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Articles\DataBase</span><span class="p">(</span><span class="s2">&quot;site.json&quot;</span><span class="p">);</span>
+<span class="nv">$category</span> <span class="o">=</span> <span class="nv">$db</span><span class="o">-&gt;</span><span class="na">categoryByName</span><span class="p">(</span><span class="s2">&quot;tutorials&quot;</span><span class="p">);</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$category</span><span class="o">-&gt;</span><span class="na">articles</span><span class="p">(</span><span class="s2">&quot;published DESC&quot;</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$article</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="nv">$article</span><span class="o">-&gt;</span><span class="na">title</span><span class="p">,</span> <span class="s2">&quot; - &quot;</span><span class="p">,</span> <span class="nv">$article</span><span class="o">-&gt;</span><span class="na">description</span><span class="p">,</span> <span class="s2">&quot; - &quot;</span><span class="p">,</span> <span class="nv">$article</span><span class="o">-&gt;</span><span class="na">author</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2>Download</h2>
+<p>Este sistema está sendo desenvolvido como código aberto já que observei durante minhas pesquisas que vários outros
+desenvolvedores também tinham interesse em um sistema parecido, mas também não tiveram sucesso em suas buscas.</p>
+<p>Você pode baixar ou clonar o código disponibilizado na <a href="http://www.github.com/ragatol/ArticlesCMS">página do projeto no GitHub</a>.</p>
+<h2>Bugs e Sugestões</h2>
+<p>Acesse a página de problemas no GitHub clicando <a href="http://github.com/ragatol/ArticlesCMS/issues">aqui</a>.</p>
+    <footer class="article_info">
+      <summary>Informações do artigo:</summary>
+      <p><time class="published" datetime="2016-07-14T00:00:00-03:00">
+        Publicado em: qui 14 julho 2016
+      </time></p>
+      <address class="vcard author">
+        Autor:             <a href="/author/rafael-fernandes.html">Rafael Fernandes</a>
+      </address>
+      <p class="category">
+          Categoria: <a href="/category/projetos.html">Projetos</a>
+      </p>
+      <p class="tags">
+          Tags:
+              <a href="/tag/programacao.html">Programação</a>
+              <a href="/tag/php.html">PHP</a>
+              <a href="/tag/codigo-aberto.html">Código Aberto</a>
+      </p>
+      <p class="extrainfo">Permalink: /projetos/articlescms/</p>
+    </footer><!-- /.post-info -->
+  </article>
+</main>
+
+  <footer id="site_footer" class="background">
+    <p>
+      <a href="http://twitter.com/ragatol" rel="bookmark"><img src="https://twitter.com/favicon.ico"> twitter</a> 
+      <a href="http://github.com/ragatol" rel="bookmark"><img src="https://github.com/favicon.ico"> github</a>
+    </p>
+    <p>&copy; 2016 Rafael Fernandes</p>
+  </footer><!-- /#contentinfo -->
+</body>
+</html>

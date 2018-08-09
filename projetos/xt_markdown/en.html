@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Rafael Fernandes - XT</title>
+  <meta charset="utf-8" />
+  <!-- link para outros arquivos do thema (css e javascript) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans%7CRoboto+Mono%7CUbuntu+Condensed" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/theme/site.css">
+  <link rel="stylesheet" type="text/css" href="/theme/codehighlight.css">
+	
+
+    <meta name="description" content="A line-by-line, fast Markdown-style text to HTML converter." />
+
+    <meta name="tags" content="MarkDown" />
+    <meta name="tags" content="PHP" />
+    <meta name="tags" content="Open Source" />
+
+</head>
+<body>
+  <header id="site_header" class="background  ">
+    <div class="sitewidth">
+    <h6><a href="/">Rafael Fernandes</a></h6>
+    <nav id="topmenu"><ul>
+      <li><a href="/category/artigos.html">Artigos</a></li>
+      <li class="active"><a href="/category/projetos.html">Projetos</a></li>
+      <li><a href="/about/">Sobre</a></li>
+    </ul></nav><!-- /#menu -->
+    </div>
+  </header>
+
+  <!-- Page content -->
+<main class="article_page">
+  <article>
+    <h1>XT</h1>
+    <aside class="translations">
+<p>Translations:</p>
+<ul>
+    <li><a href="/projetos/xt_markdown/">pt</a></li>
+</ul>
+</aside>
+
+    <p>XT is a PHP <a href="https://daringfireball.net/projects/markdown/">Markdown</a> to HTML converter.</p>
+<p>Unlike others, its output is line-by-line, minimizing memory and processor usage. As a side effect,
+it has differences compared to the original:</p>
+<ul>
+<li>Multi-line special formatting must be idented. For example:
+    ~~~Markdown<ul>
+<li>Item</li>
+<li>
+<p>Item
+    with</p>
+<p>multiple
+lines
+    -   Another item
+    ~~~
+-   There's no support for identifiers right now. Once it happens, identifiers can only be used
+    after their definition, as the parser doesn't know about what's below the current line it's
+    processing.
+-   There's no support for Setext headers for the same reason above.
+-   Because it's couterproductive using a lot of inline HTML mixed with Markdown text, there's
+    a limit of a few tags supported in that case. Use block HTML instead if you must use complex
+    HTML.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>In the near future, it'll have access to external metadata/variables defined by PHP, for easy usage of
+metadata from a CMS like my own <a href="/article.php?name=ArticlesCMS">ArticlesCMS</a>.</p>
+<h2>Download</h2>
+<p>Just clone or download from the <a href="http://www.github.com/ragatol/XT">project's page on GitHub</a>.</p>
+<h2>Bugs and Suggestions</h2>
+<p>File a bug or suggestion <a href="http://www.github.com/ragatol/XT/issues">here</a>.</p>
+    <footer class="article_info">
+      <summary>Informações do artigo:</summary>
+      <p><time class="published" datetime="2016-06-25T00:00:00-03:00">
+        Publicado em: sáb 25 junho 2016
+      </time></p>
+      <address class="vcard author">
+        Autor:             <a href="/author/rafael-fernandes.html">Rafael Fernandes</a>
+      </address>
+      <p class="category">
+          Categoria: <a href="/category/projetos.html">Projetos</a>
+      </p>
+      <p class="tags">
+          Tags:
+              <a href="/tag/markdown.html">MarkDown</a>
+              <a href="/tag/php.html">PHP</a>
+              <a href="/tag/open-source.html">Open Source</a>
+      </p>
+      <p class="extrainfo">Permalink: /projetos/xt_markdown/en.html</p>
+    </footer><!-- /.post-info -->
+  </article>
+</main>
+
+  <footer id="site_footer" class="background">
+    <p>
+      <a href="http://twitter.com/ragatol" rel="bookmark"><img src="https://twitter.com/favicon.ico"> twitter</a> 
+      <a href="http://github.com/ragatol" rel="bookmark"><img src="https://github.com/favicon.ico"> github</a>
+    </p>
+    <p>&copy; 2016 Rafael Fernandes</p>
+  </footer><!-- /#contentinfo -->
+</body>
+</html>

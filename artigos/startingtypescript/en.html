@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Rafael Fernandes - Starting using TypeScript</title>
+  <meta charset="utf-8" />
+  <!-- link para outros arquivos do thema (css e javascript) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans%7CRoboto+Mono%7CUbuntu+Condensed" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/theme/site.css">
+  <link rel="stylesheet" type="text/css" href="/theme/codehighlight.css">
+	
+
+    <meta name="description" content="A brief introduction on TypeScript, using it to create a simple random animation using the canvas element." />
+
+    <meta name="tags" content="programming" />
+    <meta name="tags" content="Typescript" />
+    <meta name="tags" content="Javascript" />
+
+</head>
+<body>
+  <header id="site_header" class="background  ">
+    <div class="sitewidth">
+    <h6><a href="/">Rafael Fernandes</a></h6>
+    <nav id="topmenu"><ul>
+      <li class="active"><a href="/category/artigos.html">Artigos</a></li>
+      <li><a href="/category/projetos.html">Projetos</a></li>
+      <li><a href="/about/">Sobre</a></li>
+    </ul></nav><!-- /#menu -->
+    </div>
+  </header>
+
+  <!-- Page content -->
+<main class="article_page">
+  <article>
+    <h1>Starting using TypeScript</h1>
+    <aside class="translations">
+<p>Translations:</p>
+<ul>
+    <li><a href="/artigos/startingtypescript/">pt</a></li>
+</ul>
+</aside>
+
+    <p>Beign mostly an C++ developer, I start a bit late looking into these new things like Node.js and TypeScript and whatnot. But after
+watching a presentation about TypeScript from Microsoft, I was interested in using it, as Javascript is terrible when you start
+developing big, complex applications. Its problems becomes more evident now with all the new features of C++11 and newer, and even
+when compared to new languages like Swift. I know there's a recent version of Javascript, ES2015, but there's no full support for it
+everywhere.</p>
+<p>So, nothing better than putting TypeScript to test making a simple, interesting application. 😁</p>
+<h2>What does TypeScript?</h2>
+<p>Typescript is an extension of the old Javascript. The most evident one is beign able to use static types for checking errors related
+to misuse of types, something not available to Javascript.</p>
+<p>But what interest me most about it is compiling TypeScript to old Javascript. Because of that, you can use all the new features that
+only ES2015 has and have your code working even on browsers that support only ES3. This by itself is more than enough to make me
+stop using Javascript directly and start coding TypeScript exclusively.</p>
+<p>Since it's a compiler, we need to install and configure it to be used with the code editor of your choice.</p>
+<h2>Installing and Configuring TypeScript</h2>
+<p>If you use VisualStudio 2013 Update 2 or later as your editor, the TypeScript compiler is already installed by default.
+Otherwise, we need to install to use it with your code editor of choice, mine being <a href="https://code.visualstudio.com/">Visual Studio Code</a>.</p>
+<p>As it's a <a href="https://nodejs.org/">Node.js</a> application, we need to install it first. </p>
+<p>Then after installing Node.js, we just need to install Typescript:</p>
+<div class="highlight"><pre><span></span>npm install -g typescript
+</pre></div>
+
+
+<p>That's it, we already can compile any TypeScript file to Javascript using:</p>
+<div class="highlight"><pre><span></span>tsc source.ts
+</pre></div>
+
+
+<p>that will create a file named <code>source.js</code>!</p>
+<h3>Compiler Configuration</h3>
+<p>In the folder that we'll use to save our code, just create a tsconfig.json file. In this article's example, the file
+has the following content:</p>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;compileOnSave&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;target&quot;</span><span class="p">:</span> <span class="s2">&quot;es3&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;commonjs&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;sourceMap&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nt">&quot;noEmitOnError&quot;</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>This configuration file tells the compiler to generate ES3 Javascript code, using a common js interpreter as standard. The <code>sourceMap</code> option
+generates a <strong>.map</strong> file that can be used by Firefox to map the generated Javascript code to our TypeScript code while debugging.
+The <code>noEmitOnError</code> option tells the compiler to not generate any output if there's an error in our code, so we dont overwrite our <strong>.js</strong> file
+that is working correctly.</p>
+<p>If you are using Visual Studio Code, we just need to create a <em>task</em> that compiles our <strong>.ts</strong> file everytime we save. Opening the
+Command Palette, just type <code>task</code> and chosse <strong>Configure Task Runner</strong> and then <strong>TypeScript - Watch Mode</strong> so the editor can
+generate the required configuration. Then, just start the <em>task</em> by issuing a <strong>Run Build Task</strong> command.</p>
+<h3>Creating the required files</h3>
+<p>Firstly we need to create the HTML that we'll use to load our script and to setup the <code>canvas</code> needed to draw.
+I created the <strong>canvas.html</strong> with the following code: </p>
+<div class="highlight"><pre><span></span><span class="cp">&lt;!DOCTYPE hmtl&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;utf8&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Teste Canvas<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">canvas</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;tela&quot;</span> <span class="na">width</span><span class="o">=</span><span class="s">&quot;640&quot;</span> <span class="na">height</span><span class="o">=</span><span class="s">&quot;480&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">canvas</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;canvas.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+
+
+<p>Then, I created a file named <strong>canvas.ts</strong> that'll have our application code.</p>
+<h2>Creating the script</h2>
+<p>To have access to the <code>canvas</code> and start drawing in it, we need the 2D context. Furthermore, we set-up some constantes
+so the script knows the canvas boundaries.</p>
+<div class="highlight"><pre><span></span><span class="kd">let</span> <span class="nx">tela</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;tela&quot;</span><span class="p">)</span> <span class="kr">as</span> <span class="nx">HTMLCanvasElement</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">ctx</span> <span class="o">=</span> <span class="nx">tela</span><span class="p">.</span><span class="nx">getContext</span><span class="p">(</span><span class="s2">&quot;2d&quot;</span><span class="p">);</span>
+
+<span class="kr">const</span> <span class="nx">backgroundColor</span> <span class="o">=</span> <span class="s2">&quot;#000&quot;</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">width</span> <span class="o">=</span> <span class="nx">tela</span><span class="p">.</span><span class="nx">width</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">height</span> <span class="o">=</span> <span class="nx">tela</span><span class="p">.</span><span class="nx">height</span><span class="p">;</span>
+
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="nx">backgroundColor</span><span class="p">;</span>
+<span class="nx">ctx</span><span class="p">.</span><span class="nx">fillRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nx">width</span><span class="p">,</span><span class="nx">height</span><span class="p">);</span>
+</pre></div>
+
+
+<p>At the first two lines, we get the <strong>canvas</strong> element and then the 2D context for later use. After that,
+we define 3 constants, that well be used by the later parts of the script, and finally, we initialize
+our canvas filling it with a black rectangle, so we can verify that it's working.</p>
+<p>A important detail here is that we need to tell TypeScript that the element returned by the <strong>document.getElementById</strong> call
+is indeed a <strong>canvas</strong>, by converting the type <strong>HTMLElement</strong> to <strong>HTMLCanvasElement</strong> using the keyword <strong>as</strong>, as
+there's no <strong>getContext</strong> method available from the <strong>HTMLElement</strong> class.</p>
+<h3>Creating classes</h3>
+<p>Our little project has as an objective draw various geometric objects made of a random number of points moving around our
+canvas, inspired by classic Windows screen-saver, <strong>Polygons</strong>.</p>
+<p>The first class we need is how to represent a point in the 2D space, made of two coordinates <strong>x</strong> and <strong>y</strong>.
+Additionaly, as we have to move the point around the canvas, we need to add an operation that moves the point to a
+certaing direction represented by another group of coordinates too. So, we have the <strong><em>Vector</em></strong> class.</p>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">Vector</span> <span class="p">{</span>
+    <span class="nx">x</span>: <span class="kt">number</span><span class="p">;</span>
+    <span class="nx">y</span>: <span class="kt">number</span><span class="p">;</span>
+
+    <span class="kr">constructor</span><span class="p">(</span> <span class="nx">x</span>:<span class="kt">number</span> <span class="p">,</span> <span class="nx">y</span>:<span class="kt">number</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">add</span><span class="p">(</span><span class="nx">o</span>:<span class="kt">Vector</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">+=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">+=</span> <span class="nx">o</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Now we can create a class that represents the point with a direction, that'll move around, bouncing at the
+canvas' sides. Not only it'll have a position and direction information, but it'll have a method to update
+it's position at each animation frame. We'll call it <strong><em>MovingPoint</em></strong>.</p>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">MovingPoint</span> <span class="p">{</span>
+    <span class="nx">position</span>: <span class="kt">Vector</span><span class="p">;</span>
+    <span class="nx">direction</span>: <span class="kt">Vector</span><span class="p">;</span>
+
+    <span class="kr">constructor</span><span class="p">(</span><span class="nx">position</span>:<span class="kt">Vector</span><span class="p">,</span><span class="nx">direction</span>:<span class="kt">Vector</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">position</span> <span class="o">=</span> <span class="nx">position</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">direction</span> <span class="o">=</span> <span class="nx">direction</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">move() {</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">direction</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">x</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">x</span> <span class="o">&gt;=</span> <span class="nx">width</span><span class="p">)</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">direction</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="o">-</span><span class="k">this</span><span class="p">.</span><span class="nx">direction</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span> <span class="o">&gt;=</span> <span class="nx">height</span><span class="p">)</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">direction</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="o">-</span><span class="k">this</span><span class="p">.</span><span class="nx">direction</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>We need a class that represents a collection of points to make the polygon...
+But first, as we want to create random polygons, let's create some auxiliary functions:</p>
+<ul>
+<li><strong><em>randomPos</em></strong> creates a random position inside the <strong>canvas</strong>.</li>
+<li><strong><em>randomSpeed</em></strong> creates a random speed for the point movement.</li>
+<li><strong><em>randomDir</em></strong> cretes a random direction with a speed to direct the point.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">randomPos</span><span class="p">(</span><span class="nx">width</span>:<span class="kt">number</span><span class="p">,</span><span class="nx">height</span>:<span class="kt">number</span><span class="p">)</span><span class="o">:</span> <span class="nx">Vector</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="nx">width</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="nx">height</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Vector</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">randomSpeed</span><span class="p">(</span><span class="nx">min</span>:<span class="kt">number</span><span class="p">,</span> <span class="nx">max</span>:<span class="kt">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">val</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nx">max</span><span class="p">)</span> <span class="o">-</span> <span class="nx">max</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">val</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">val</span> <span class="o">&lt;</span> <span class="nx">min</span><span class="p">)</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">min</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">val</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">val</span> <span class="o">&gt;</span> <span class="o">-</span><span class="nx">min</span><span class="p">)</span> <span class="nx">val</span> <span class="o">=</span> <span class="o">-</span><span class="nx">min</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">val</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">randomDir</span><span class="p">(</span><span class="nx">minSpeed</span>:<span class="kt">number</span><span class="p">,</span> <span class="nx">maxSpeed</span>:<span class="kt">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">randomSpeed</span><span class="p">(</span><span class="nx">minSpeed</span><span class="p">,</span><span class="nx">maxSpeed</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">y</span> <span class="o">=</span> <span class="nx">randomSpeed</span><span class="p">(</span><span class="nx">minSpeed</span><span class="p">,</span><span class="nx">maxSpeed</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Vector</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Now, we just need to create a class that is a group of at least 2 points (so we get a line), that'll be drawn at the canvas
+using a pre-defined color at each frame. That'll be our <strong><em>Polygon</em></strong> class.</p>
+<p>For it, we'll create 2 methods so that each polygon can move it's points and draw lines at the <strong>canvas</strong>.</p>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">Polygon</span> <span class="p">{</span>
+    <span class="nx">points</span>: <span class="kt">MovingPoint</span><span class="p">[];</span>
+    <span class="nx">color</span>: <span class="kt">string</span><span class="p">;</span>
+    <span class="nx">open</span>: <span class="kt">boolean</span><span class="p">;</span>
+
+    <span class="kr">constructor</span><span class="p">(</span><span class="nx">vectors</span>:<span class="kt">number</span><span class="p">,</span><span class="nx">color</span>:<span class="kt">string</span><span class="p">,</span><span class="nx">open</span>:<span class="kt">boolean</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">vectors</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Need at least 2 poins!&quot;</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">vectors</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">open</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span> <span class="k">else</span> <span class="k">this</span><span class="p">.</span><span class="nx">open</span> <span class="o">=</span> <span class="nx">open</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">color</span> <span class="o">=</span> <span class="nx">color</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">points</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">MovingPoint</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">vectors</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">points</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MovingPoint</span><span class="p">(</span><span class="nx">randomPos</span><span class="p">(</span><span class="nx">width</span><span class="p">,</span><span class="nx">height</span><span class="p">),</span><span class="nx">randomDir</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nx">update() {</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">point</span> <span class="nx">of</span> <span class="k">this</span><span class="p">.</span><span class="nx">points</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">point</span><span class="p">.</span><span class="nx">move</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nx">draw</span><span class="p">(</span><span class="nx">ctx</span>:<span class="kt">CanvasRenderingContext2D</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">beginPath</span><span class="p">();</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">strokeStyle</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">color</span><span class="p">;</span>
+        <span class="kd">let</span> <span class="p">{</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">points</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">position</span><span class="p">;</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">moveTo</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">points</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="o">++</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">let</span> <span class="p">{</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">position</span><span class="p">;</span>
+            <span class="nx">ctx</span><span class="p">.</span><span class="nx">lineTo</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">open</span><span class="p">)</span> <span class="nx">ctx</span><span class="p">.</span><span class="nx">closePath</span><span class="p">();</span>
+        <span class="nx">ctx</span><span class="p">.</span><span class="nx">stroke</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>While coding this class, we use some of the features only available for ES2015 and TypeScript: in the <strong>constructor</strong>, we used
+<strong><em>generics</em></strong> to create an <strong>Array</strong> of a specific type; in <strong>update</strong>, we used the new <strong><em>for (let item of collection)</em></strong> that iterates
+over all the elements of a collection; and in <strong>draw</strong> we use <strong><em>object destructuring</em></strong> of the <strong>Vector</strong> type into 2 variables,
+for more legible code. </p>
+<h2>Drawing at the Canvas</h2>
+<p>Now we just need to create some <strong><em>Polygon</em></strong> objects, create a function that well be called on each frame update and it's done!</p>
+<div class="highlight"><pre><span></span><span class="kd">let</span> <span class="nx">objects</span>:<span class="kt">Polygon</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="k">new</span> <span class="nx">Polygon</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;white&quot;</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Polygon</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;orange&quot;</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Polygon</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="s2">&quot;rgb(100,150,255)&quot;</span><span class="p">)</span>
+<span class="p">];</span>
+
+<span class="kd">let</span> <span class="nx">render</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">fillStyle</span> <span class="o">=</span> <span class="s2">&quot;rgba(0,0,0,.075)&quot;</span><span class="p">;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">fillRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nx">width</span><span class="p">,</span><span class="nx">height</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">obj</span> <span class="nx">of</span> <span class="nx">objects</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">obj</span><span class="p">.</span><span class="nx">update</span><span class="p">();</span>
+        <span class="nx">obj</span><span class="p">.</span><span class="nx">draw</span><span class="p">(</span><span class="nx">ctx</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">renderingLoop</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">setInterval</span><span class="p">(</span><span class="nx">render</span><span class="p">,</span><span class="mi">33</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Note that <strong>render</strong> uses the new <strong><em>lambda</em></strong> sintax to create the function. This new syntax creates the correct
+<strong><em>this</em></strong> bindings without the need to create a function scope like we have to do on old Javascript, making the code
+less prone to errors.</p>
+<p>Now just save the file, confirm that the new <strong>canvas.js</strong> was created by the TypeScript compiler in the same folder,
+and open our html in a browser to <a href="/canvas/canvas.html">see the result</a>!</p>
+<ul>
+<li>TypeScript source code: <a href="/canvas/canvas.ts">canvas.ts</a>;</li>
+<li>Javascript generated: <a href="/canvas/canvas.js">canvas.js</a>;</li>
+</ul>
+<h2>References</h2>
+<p>Node.js: <a href="https://nodejs.org/">https://nodejs.org/</a></p>
+<p>TypeScript: <a href="https://www.typescriptlang.org/">https://www.typescriptlang.org/</a></p>
+<p>Visual Studio Code: <a href="https://code.visualstudio.com/">https://code.visualstudio.com/</a></p>
+<p>Canvas: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API</a></p>
+    <footer class="article_info">
+      <summary>Informações do artigo:</summary>
+      <p><time class="published" datetime="2016-09-14T00:00:00-03:00">
+        Publicado em: qua 14 setembro 2016
+      </time></p>
+      <address class="vcard author">
+        Autor:             <a href="/author/rafael-fernandes.html">Rafael Fernandes</a>
+      </address>
+      <p class="category">
+          Categoria: <a href="/category/artigos.html">Artigos</a>
+      </p>
+      <p class="tags">
+          Tags:
+              <a href="/tag/programming.html">programming</a>
+              <a href="/tag/typescript.html">Typescript</a>
+              <a href="/tag/javascript.html">Javascript</a>
+      </p>
+      <p class="extrainfo">Permalink: /artigos/startingtypescript/en.html</p>
+    </footer><!-- /.post-info -->
+  </article>
+</main>
+
+  <footer id="site_footer" class="background">
+    <p>
+      <a href="http://twitter.com/ragatol" rel="bookmark"><img src="https://twitter.com/favicon.ico"> twitter</a> 
+      <a href="http://github.com/ragatol" rel="bookmark"><img src="https://github.com/favicon.ico"> github</a>
+    </p>
+    <p>&copy; 2016 Rafael Fernandes</p>
+  </footer><!-- /#contentinfo -->
+</body>
+</html>

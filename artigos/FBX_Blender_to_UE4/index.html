@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <title>Rafael Fernandes - Exportando modelos do Blender para a Unreal Engine 4</title>
+  <meta charset="utf-8" />
+  <!-- link para outros arquivos do thema (css e javascript) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans%7CRoboto+Mono%7CUbuntu+Condensed" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/theme/site.css">
+  <link rel="stylesheet" type="text/css" href="/theme/codehighlight.css">
+	
+
+    <meta name="description" content="Alguns cuidados no uso do Blender 3D como ferramenta de criação de modelos para a Unreal Engine 4." />
+
+    <meta name="tags" content="game development" />
+    <meta name="tags" content="modelling" />
+    <meta name="tags" content="blender" />
+    <meta name="tags" content="ue4" />
+
+</head>
+<body>
+  <header id="site_header" class="background  ">
+    <div class="sitewidth">
+    <h6><a href="/">Rafael Fernandes</a></h6>
+    <nav id="topmenu"><ul>
+      <li class="active"><a href="/category/artigos.html">Artigos</a></li>
+      <li><a href="/category/projetos.html">Projetos</a></li>
+      <li><a href="/about/">Sobre</a></li>
+    </ul></nav><!-- /#menu -->
+    </div>
+  </header>
+
+  <!-- Page content -->
+<main class="article_page">
+  <article>
+    <h1>Exportando modelos do Blender para a Unreal Engine 4</h1>
+    <aside class="translations">
+<p>Translations:</p>
+<ul>
+    <li><a href="/artigos/FBX_Blender_to_UE4/en.html">en</a></li>
+</ul>
+</aside>
+
+    <p>Há alguns anos atrás, quando eu estava fazendo minha própria engine de jogo 3D,
+acabei utilizando o Blender para a criação dos meus modelos. Na época,
+o blender 2.4 me era bem estranho, já que minha primeira experiência com
+programas de modelagem foi o 3D Studio Max, e apanhei um pouco dele
+inicialmente, mas como eu não tinha condições para comprar o 3DS, o jeito foi
+aprender o Blender. Até que comecei a utilizar ele bem, mesmo ainda não muito
+confiante, mas depois de ter criado um plugin para exportar os modelos no
+formato que eu utilizava na minha engine comecei a apreciá-lo mais.</p>
+<p>Passado alguns anos, e voltando a necessidade de criar modelos para jogos,
+primeiro fiz uma avaliação de qual ferramenta me daria segurança de trabalhar
+com rapidez, e depois de testar as versões mais recentes de Maia e 3DSMax,
+fiquei surpreso ao ficar mais a vontade com o Blender. A interface está bem mais
+amigável, clara, e surpreendentemente trabalho com ele muito mais rápido do que
+com os concorrentes. Com a vantagem de ser gratuito, acabei optando por ele
+de novo.</p>
+<p>Infelizmente, a Unreal Engine 4 trabalha apenas com o formato .fbx, e tem
+plugins que facilitam muito a integração da engine com Maia e 3DSMax. Então,
+para utilizar o Blender, alguns cuidados devem ser tomados para que a engine
+importe os modelos criados nele sem problemas.</p>
+<h2>Criando o arquivo inicial padrão</h2>
+<p>Para facilitar o trabalho e não precisar ficar ajustando tudo toda vez que criar
+um novo arquivo, a melhor opção é modificar o arquivo de inicialização do
+Blender com as configurações que usaremos em todos os modelos.</p>
+<p>Abrindo o Blender e criando um novo arquivo, a primeira coisa que gosto de fazer
+é apagar todos os objetos padrões (a câmera, o cubo e a luz direcional) que
+existem no arquivo inicial do Blender.</p>
+<p>Depois precisamos ajustar as unidades de coordenadas. A UE4 utiliza centímetros
+como unidade padrão. Alguns preferem fazer a conversão de unidades no momento de
+exportar os modelos, mas acho assim mais burocrático. Para fazer o ajuste, é só
+ir na guia "Scene" e selecionar o preset "Centimeters" na área "Units" e pronto.</p>
+<p>A última coisa a se fazer é criar um preset de exportação para os modelos que
+devemos exportar no formato <strong>FBX</strong>. Usando os ajustes padrão do exportador,
+mudo as seguintes opções:</p>
+<ul>
+<li>Na aba <strong>Main</strong>:<ul>
+<li><em>Selected Objects</em> marcado;</li>
+<li><em>Forward:</em> para -Y;</li>
+<li><em>Up:</em> para Z;</li>
+<li>E logo abaixo, deixo marcado apenas objetos do tipo <em>Empty</em>,
+<em>Armature</em>, <em>Mesh</em> e <em>Other</em>;</li>
+</ul>
+</li>
+<li>Na aba <strong>Geometries</strong>:<ul>
+<li><em>Use Modifiers Render Settings</em> <strong>desmarcado</strong>;</li>
+<li><em>Smoothing</em> em <strong>Faces</strong>;</li>
+</ul>
+</li>
+<li>Finalmente, na aba <strong>Armature</strong>:<ul>
+<li>Desmarque <em>Add Leaf Bones</em>;</li>
+<li><em>Primary Bone Axis</em> para <strong>X Axis</strong>;</li>
+<li><em>Secondary Bone Axis</em> para <strong>-Y Axis</strong>;</li>
+</ul>
+</li>
+</ul>
+<p>O resto não precisa ser alterado.</p>
+<p>O motivo para a mudança dos eixos na aba <strong>Armature</strong> é para que os eixos
+dos ossos do esqueleto estejam alinhados com o padrão de socket da engine,
+que utiliza o eixo X positivo como "para frente" e o eixo Z positivo como
+"para cima". Assim, você pode atrelar objetos nos esqueletos diretamente, sem
+se preocupar em criar sockets e depois ajustar sua rotação.</p>
+<p>Terminado os ajustes, é só utilizar o comando Ctrl+U, ou no menu Arquivo,
+<strong>Save Startup File</strong>. Costumo também gravar este arquivo como backup em
+um local de fácil acesso caso tenha que reconfigurar o Blender por algum motivo.</p>
+<h2>Cuidados ao exportar os modelos</h2>
+<p>Primeiramente, verifique com o modificador <em>Triangulate</em> se todas as faces
+de seu modelo estão sendo transformadas em triângulos de forma satisfatória.
+Às vezes algumas faces podem não ter vértices coplanares, fazendo com que o
+modelo, ao ser importado na UE4, tenha erros ao transformar estas
+faces em triângulos. Mas a triangulação pode fazer com que apareçam outros
+erros, principalmente no cálculo de tangentes, quando estas dependem do fato da
+superfície ser composta por mais de três vértices. Uma solução seria fazer
+a triangulação manualmente, ou utilizar o comando de fazer as faces serem
+coplanares no menu <em>Cleanup</em>.</p>
+<p>Outro cuidado é com a intenção de uso do modelo na engine. Modelos de projéteis
+e outros objetos que serão usados diretamente com o uso do eixo X da UE4 como
+orientação devem ser rotacionados para terem o eixo X positivo como "frente".
+Apesar da própria UE4 ter a capacidade de fazer essa rotação durante a
+importação do modelo, ela não lida bem com isso no caso do modelo conter uma
+animação de esqueleto.</p>
+<h2>Ajustes para importação dos modelos na UE4</h2>
+<p>Geralmente a única opção que deve ser ajustada é a importação de normais e
+tangentes. Tanto Blender como a UE4 usam o mesmo espaço de tangente,
+<em>MikkTSpace</em>. Por causa disso, para manter a aparência do modelo o mais próximo
+possível do que é mostrado dentro do Blender, o melhor é importar tanto as
+normais quanto as tangentes calculadas na exportação do arquivo FBX,
+principalmente para modelos com esqueletos, já que do contrário a UE4 não
+é capaz de manter os grupos de suavização do modelo.</p>
+<h2>Plugins do Blender recomendados</h2>
+<ul>
+<li>https://github.com/ekaj2/uvmap_tools - Ferramentas para manipular a lista de
+    mapas de UV.</li>
+<li>https://github.com/fedackb/yavne - Um add-on para manualmente calcular as
+    normais dos modelos de baixa ou média complexidade geométrica. Excelente
+    para modelos mecânicos, podendo criar cantos com aparência arredondadas
+    com apenas uma face.</li>
+<li>https://github.com/amb/blender-scripts/blob/master/mesh_curves.py - Ferramenta
+    que gera informações sobre curvatura e codifica nos canais de cor de vértice.
+    Ótimo para criar materiais que usam dessa informação para definir efeitos,
+    oclusão ambiente baseada em vértices, etc.</li>
+</ul>
+    <footer class="article_info">
+      <summary>Informações do artigo:</summary>
+      <p><time class="published" datetime="2017-11-19T00:00:00-02:00">
+        Publicado em: dom 19 novembro 2017
+      </time></p>
+      <address class="vcard author">
+        Autor:             <a href="/author/rafael-fernandes.html">Rafael Fernandes</a>
+      </address>
+      <p class="category">
+          Categoria: <a href="/category/artigos.html">Artigos</a>
+      </p>
+      <p class="tags">
+          Tags:
+              <a href="/tag/game-development.html">game development</a>
+              <a href="/tag/modelling.html">modelling</a>
+              <a href="/tag/blender.html">blender</a>
+              <a href="/tag/ue4.html">ue4</a>
+      </p>
+      <p class="extrainfo">Permalink: /artigos/FBX_Blender_to_UE4/</p>
+    </footer><!-- /.post-info -->
+  </article>
+</main>
+
+  <footer id="site_footer" class="background">
+    <p>
+      <a href="http://twitter.com/ragatol" rel="bookmark"><img src="https://twitter.com/favicon.ico"> twitter</a> 
+      <a href="http://github.com/ragatol" rel="bookmark"><img src="https://github.com/favicon.ico"> github</a>
+    </p>
+    <p>&copy; 2016 Rafael Fernandes</p>
+  </footer><!-- /#contentinfo -->
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <title>Rafael Fernandes - XT</title>
+  <meta charset="utf-8" />
+  <!-- link para outros arquivos do thema (css e javascript) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans%7CRoboto+Mono%7CUbuntu+Condensed" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/theme/site.css">
+  <link rel="stylesheet" type="text/css" href="/theme/codehighlight.css">
+	
+
+    <meta name="description" content="Um rápido conversor linha-por-linha de texto estilo Markdown para HTML." />
+
+    <meta name="tags" content="MarkDown" />
+    <meta name="tags" content="PHP" />
+    <meta name="tags" content="Código Aberto" />
+
+</head>
+<body>
+  <header id="site_header" class="background  ">
+    <div class="sitewidth">
+    <h6><a href="/">Rafael Fernandes</a></h6>
+    <nav id="topmenu"><ul>
+      <li><a href="/category/artigos.html">Artigos</a></li>
+      <li class="active"><a href="/category/projetos.html">Projetos</a></li>
+      <li><a href="/about/">Sobre</a></li>
+    </ul></nav><!-- /#menu -->
+    </div>
+  </header>
+
+  <!-- Page content -->
+<main class="article_page">
+  <article>
+    <h1>XT</h1>
+    <aside class="translations">
+<p>Translations:</p>
+<ul>
+    <li><a href="/projetos/xt_markdown/en.html">en</a></li>
+</ul>
+</aside>
+
+    <p>XT é um conversor de texto estilo <a href="https://daringfireball.net/projects/markdown/">Markdown</a> para HTML feito em PHP.</p>
+<p>Diferente de outras implementações, sua saída é uma linha a cada linha lida do arquivo original, portanto utilizando
+o mínimo de memória necessário para a operação, além de ser extremamente rápido.</p>
+<p>Por causa disso, existem algumas diferenças entre ele e o original:
+-   Em listas, itens com várias linhas devem ser alinhados com a mesma quantidade de tabulações. Por exemplo:
+    ~~~
+    -   Item
+    -   Item
+        com</p>
+<div class="highlight"><pre><span></span>    várias
+    linhas
+-   outro item
+~~~
+</pre></div>
+
+
+<ul>
+<li>Por enquanto, não há suporte para identificadores. Quando acontecer, o uso de um identificador
+    só poderá ocorrer após sua definição, já que o conversor processa cada linha imediatamente, não
+    verificando as linhas posteriores.</li>
+<li>Não há suporte à cabeçalhos Setext, pelo mesmo motivo do item anterior.</li>
+<li>Não há suporte à tabelas no momento, como na implementação oficial. Tabelas são extensões feitas por outros desenvolvedores.</li>
+<li>Há certo limite para HTML no meio do texto simples. Utilize um bloco de HTML caso necessite de
+    código HTML mais complexo (já que não é este o propósito de se utilizar um arquivo de texto simples).</li>
+</ul>
+<p>Futuramente, está previsto a incorporação de identificadores externos, para integração com o sistema
+<a href="/article.php?name=ArticlesCMS">ArticlesCMS</a> para facilitar o uso de metadados diretamente no texto, por isto minha necessidade de
+criar este projeto. Por exemplo, <code>@title</code> seria substituído pelo título do artigo, registrado no banco de dados.</p>
+<h2>Download</h2>
+<p>Basta baixar ou clonar da <a href="http://www.github.com/ragatol/XT">página do projeto no GitHub</a>.</p>
+<h2>Bugs e Sugestões</h2>
+<p>Acesse a <a href="http://www.github.com/ragatol/XT/issues">página de problemas no GitHub</a>.</p>
+    <footer class="article_info">
+      <summary>Informações do artigo:</summary>
+      <p><time class="published" datetime="2016-06-25T00:00:00-03:00">
+        Publicado em: sáb 25 junho 2016
+      </time></p>
+      <address class="vcard author">
+        Autor:             <a href="/author/rafael-fernandes.html">Rafael Fernandes</a>
+      </address>
+      <p class="category">
+          Categoria: <a href="/category/projetos.html">Projetos</a>
+      </p>
+      <p class="tags">
+          Tags:
+              <a href="/tag/markdown.html">MarkDown</a>
+              <a href="/tag/php.html">PHP</a>
+              <a href="/tag/codigo-aberto.html">Código Aberto</a>
+      </p>
+      <p class="extrainfo">Permalink: /projetos/xt_markdown/</p>
+    </footer><!-- /.post-info -->
+  </article>
+</main>
+
+  <footer id="site_footer" class="background">
+    <p>
+      <a href="http://twitter.com/ragatol" rel="bookmark"><img src="https://twitter.com/favicon.ico"> twitter</a> 
+      <a href="http://github.com/ragatol" rel="bookmark"><img src="https://github.com/favicon.ico"> github</a>
+    </p>
+    <p>&copy; 2016 Rafael Fernandes</p>
+  </footer><!-- /#contentinfo -->
+</body>
+</html>

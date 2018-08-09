@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Rafael Fernandes - Exporting models from Blender to Unreal Engine 4</title>
+  <meta charset="utf-8" />
+  <!-- link para outros arquivos do thema (css e javascript) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans%7CRoboto+Mono%7CUbuntu+Condensed" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/theme/site.css">
+  <link rel="stylesheet" type="text/css" href="/theme/codehighlight.css">
+	
+
+    <meta name="description" content="How to configure Blender to create and export models to use in Unreal Engine 4." />
+
+    <meta name="tags" content="game development" />
+    <meta name="tags" content="modelling" />
+    <meta name="tags" content="blender" />
+    <meta name="tags" content="ue4" />
+
+</head>
+<body>
+  <header id="site_header" class="background  ">
+    <div class="sitewidth">
+    <h6><a href="/">Rafael Fernandes</a></h6>
+    <nav id="topmenu"><ul>
+      <li class="active"><a href="/category/artigos.html">Artigos</a></li>
+      <li><a href="/category/projetos.html">Projetos</a></li>
+      <li><a href="/about/">Sobre</a></li>
+    </ul></nav><!-- /#menu -->
+    </div>
+  </header>
+
+  <!-- Page content -->
+<main class="article_page">
+  <article>
+    <h1>Exporting models from Blender to Unreal Engine 4</h1>
+    <aside class="translations">
+<p>Translations:</p>
+<ul>
+    <li><a href="/artigos/FBX_Blender_to_UE4/">pt</a></li>
+</ul>
+</aside>
+
+    <p>A while back, when I was creating my own 3D engine, I started using Blender
+for my modelling needs. At the time, Blender 2.4 was very strange to me,
+being used to modelling with 3DS Max. I didn't like it then, but
+since I didn't have the money to buy the 3DS Max, I had no choice. Fortunately,
+as I got more and more used to it, and had a good impression creating my
+add-on to export the models to the format I used in my engine, I started to like
+it.</p>
+<p>I stopped modelling for quite some time, but then recently I had the need to
+create 3D models again. So, it was time to choose the 3D modelling program
+again. Surprisingly, I really felt at home with Blender, now at version 2.7,
+with a much better interface. So I decided to use it again.</p>
+<p>Unfortunately, Unreal Engine 4 works only with FBX, and only offers nice
+integration with plugins for Maya and 3DSMax. So, to use Blender, I had to
+learn how to configure it so I can use the models inside UE4 with no
+surprises while importing.</p>
+<h2>Setting up the start-up file</h2>
+<p>I don't like to change all the settings every time I create a new model, so the
+best option is to setup the Blender start-up file. Starting Blender and creating
+a new file, the first thing I like to do is delete all the default objects
+(the camera, cube and light).</p>
+<p>Then, I configure the unit settings. UE4 uses centimeters by default. I saw
+some modellers adjusting the unit scale at export, but it may make exporting
+models and skeletons in the same file harder. To set the global unit scale,
+I go to the "Scene" tab inside the Properties view, then I select the
+"Centimeters" preset in the "Units" area. Done.</p>
+<p>The last thing to do is to create an <strong>"Export FBX"</strong> preset. Using the default
+preset as a starting point, I change the following options:</p>
+<ul>
+<li>
+<p><strong>Main</strong> tab:</p>
+<ul>
+<li>Check <em>Selected Objects</em>;</li>
+<li><em>Forward:</em> to -Y;</li>
+<li><em>Up:</em> to Z;</li>
+<li>Right below, I only leave checked the <em>Empty</em>, <em>Armature</em>, <em>Mesh</em> and
+<em>Other</em>;</li>
+</ul>
+</li>
+<li>
+<p><strong>Geometries</strong> tab:</p>
+<ul>
+<li><em>Use Modifiers Render Settings</em> <strong>unchecked</strong>;</li>
+<li><em>Smoothing</em> set to <strong>Faces</strong>;</li>
+</ul>
+</li>
+<li>
+<p>And finally, the <strong>Armature</strong> tab:</p>
+<ul>
+<li>Unset <em>Add Leaf Bones</em>;</li>
+<li><em>Primary Bone Axis</em> to <strong>X Axis</strong>;</li>
+<li><em>Secondary Bone Axis</em> to <strong>-Y Axis</strong>;</li>
+</ul>
+</li>
+</ul>
+<p>The reason to change the <strong>Armature</strong> axis is to make them match the same
+axis orientation that the engine, that uses the positive X axis as "forward"
+and the Z axis as "up". That way, you can use the bones as sockets directly,
+not having to correct the rotation.</p>
+<p>Finally, we press <strong>Ctrl+U</strong>, or in the File menu, select <strong>Save Startup File</strong>.</p>
+<h2>Details before exporting the model</h2>
+<p>Firstly, check with the <em>Triangulate</em> modifier if all the faces of your model
+are being transformed to triangles in a satisfactory way. Sometimes, faces can
+have non-coplanar vertices, which can result in unexpected triangulation and/or
+tangent calculation errors, which leads to shading errors. In this case,
+it's better to manually triangulate or use the "make planar" function in the
+<em>Clean-up</em> edit mode menu.</p>
+<p>Next, the model need to be oriented depending on how it'll be used in the
+engine. It helps to make your model face the positive X axis if it is a
+projectile, or other object that will mainly travel forward after being
+spawned. While the engine can do that rotation when importing, it won't work
+on models with skeletons, since the orientation of the animations will be
+different from the "corrected" orientation.</p>
+<h2>Import options in the Unreal Engine 4</h2>
+<p>Generally, the option that should be used for all the models is the import
+of normals and tangents. Since both Blender and UE4 use the same tangent space,
+<em>MikkTSpace</em>, the model can be rendered in the engine as close as it was
+in Blender. This is most important when importing models used with skeletal
+animation because it's the only way you can preserve smoothing groups.</p>
+<h2>Recommended Blender Add-Ons</h2>
+<p><a href="https://github.com/ekaj2/uvmap_tools">uvmap_tools</a> - A tool to organize UV layers.</p>
+<p><a href="https://github.com/fedackb/yavne">YAVNE</a> - Add-on to manually calculate normals
+for low or medium complexity models. Excellent for mechanical models, allow the
+creation of rounded edges using only one face.</p>
+<p><a href="https://github.com/amb/blender-scripts/blob/master/mesh_curves.py">mesh_curves</a>- Generate
+curvature information and saves it into vertex colors. Great for using this
+information to create complex materials, vertex based ambient occlusion, etc.</p>
+    <footer class="article_info">
+      <summary>Informações do artigo:</summary>
+      <p><time class="published" datetime="2017-11-19T00:00:00-02:00">
+        Publicado em: dom 19 novembro 2017
+      </time></p>
+      <address class="vcard author">
+        Autor:             <a href="/author/rafael-fernandes.html">Rafael Fernandes</a>
+      </address>
+      <p class="category">
+          Categoria: <a href="/category/artigos.html">Artigos</a>
+      </p>
+      <p class="tags">
+          Tags:
+              <a href="/tag/game-development.html">game development</a>
+              <a href="/tag/modelling.html">modelling</a>
+              <a href="/tag/blender.html">blender</a>
+              <a href="/tag/ue4.html">ue4</a>
+      </p>
+      <p class="extrainfo">Permalink: /artigos/FBX_Blender_to_UE4/en.html</p>
+    </footer><!-- /.post-info -->
+  </article>
+</main>
+
+  <footer id="site_footer" class="background">
+    <p>
+      <a href="http://twitter.com/ragatol" rel="bookmark"><img src="https://twitter.com/favicon.ico"> twitter</a> 
+      <a href="http://github.com/ragatol" rel="bookmark"><img src="https://github.com/favicon.ico"> github</a>
+    </p>
+    <p>&copy; 2016 Rafael Fernandes</p>
+  </footer><!-- /#contentinfo -->
+</body>
+</html>

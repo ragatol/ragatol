@@ -32,15 +32,17 @@
   <!-- Page content -->
 <main class="article_page">
   <article>
-    <h1>ArticlesCMS</h1>
-    <aside class="translations">
+    <!-- Lista de Traducoes -->
+<aside class="translations">
 <p>Translations:</p>
 <ul>
     <li><a href="/projetos/articlescms/">pt</a></li>
 </ul>
 </aside>
+<!-- Fim da lista de traducoes -->
 
-    <p>ArticlesCMS is a multi-language content management system for personal websites or blogs,
+    <h1>ArticlesCMS</h1>
+<p>ArticlesCMS is a multi-language content management system for personal websites or blogs,
 focused on simplicity and ease of use alongside with the developer's own PHP code. </p>
 <p>This site, obviously, use this system. 😉</p>
 <h2>Why another CMS?</h2>
@@ -68,23 +70,25 @@ The main features are:</p>
 user-friendly way to manage content.</p>
 <h2>Examples</h2>
 <p>Category listing:</p>
-<div class="highlight"><pre><span></span><span class="x">include &quot;articles.php&quot;;</span>
+<div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">include</span> <span class="s2">&quot;articles.php&quot;</span><span class="p">;</span>
 
-<span class="x">$db = new Articles\DataBase(&quot;site.json&quot;);</span>
-<span class="x">foreach ($db-&gt;categories() as $category) {</span>
-<span class="x">    echo $category-&gt;name, &quot;\n&quot;;</span>
-<span class="x">}</span>
+<span class="nv">$db</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Articles\DataBase</span><span class="p">(</span><span class="s2">&quot;site.json&quot;</span><span class="p">);</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$db</span><span class="o">-&gt;</span><span class="na">categories</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$category</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="nv">$category</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 
 
 <p>Listing the 10 latest articles from a category:</p>
-<div class="highlight"><pre><span></span><span class="x">include &quot;articles.php&quot;;</span>
+<div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">include</span> <span class="s2">&quot;articles.php&quot;</span><span class="p">;</span>
 
-<span class="x">$db = new Articles\DataBase(&quot;site.json&quot;);</span>
-<span class="x">$category = $db-&gt;categoryByName(&quot;tutorials&quot;);</span>
-<span class="x">foreach ($category-&gt;articles(&quot;published DESC&quot;,10) as $article) {</span>
-<span class="x">    echo $article-&gt;title, &quot; - &quot;, $article-&gt;description, &quot; - &quot;, $article-&gt;author, &quot;\n&quot;;</span>
-<span class="x">}</span>
+<span class="nv">$db</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Articles\DataBase</span><span class="p">(</span><span class="s2">&quot;site.json&quot;</span><span class="p">);</span>
+<span class="nv">$category</span> <span class="o">=</span> <span class="nv">$db</span><span class="o">-&gt;</span><span class="na">categoryByName</span><span class="p">(</span><span class="s2">&quot;tutorials&quot;</span><span class="p">);</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$category</span><span class="o">-&gt;</span><span class="na">articles</span><span class="p">(</span><span class="s2">&quot;published DESC&quot;</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$article</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="nv">$article</span><span class="o">-&gt;</span><span class="na">title</span><span class="p">,</span> <span class="s2">&quot; - &quot;</span><span class="p">,</span> <span class="nv">$article</span><span class="o">-&gt;</span><span class="na">description</span><span class="p">,</span> <span class="s2">&quot; - &quot;</span><span class="p">,</span> <span class="nv">$article</span><span class="o">-&gt;</span><span class="na">author</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 
 
@@ -109,7 +113,7 @@ user-friendly way to manage content.</p>
               <a href="/tag/php.html">PHP</a>
               <a href="/tag/open-source.html">Open Source</a>
       </p>
-      <p class="extrainfo">Permalink: /projetos/articlescms/en.html</p>
+      <p class="extrainfo">Permalink: <a href="/projetos/articlescms/en.html">/projetos/articlescms/en.html</a></p>
     </footer><!-- /.post-info -->
   </article>
 </main>

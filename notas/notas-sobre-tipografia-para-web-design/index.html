@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <title>Rafael Fernandes - Notas sobre Tipografia para Web Design</title>
+  <meta charset="utf-8" />
+  <!-- link para outros arquivos do thema (css e javascript) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans%7CRoboto+Mono%7CUbuntu+Condensed" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/theme/site.css">
+  <link rel="stylesheet" type="text/css" href="/theme/codehighlight.css">
+	
+
+
+    <meta name="tags" content="Web Design" />
+
+</head>
+<body>
+  <header id="site_header" class="background  ">
+    <div class="sitewidth">
+    <h6><a href="/">Rafael Fernandes</a></h6>
+    <nav id="topmenu"><ul>
+      <li><a href="/category/artigos.html">Artigos</a></li>
+      <li class="active"><a href="/category/notas.html">Notas</a></li>
+      <li><a href="/category/projetos.html">Projetos</a></li>
+      <li><a href="/about/">Sobre</a></li>
+    </ul></nav><!-- /#menu -->
+    </div>
+  </header>
+
+  <!-- Page content -->
+<main class="article_page">
+  <article>
+    
+    <h1>Notas sobre Tipografia para Web Design</h1>
+<p>Atributos e pontos importantes a serem considerados ao decidir sobre a tipografia utilizada no design do site.</p>
+<h2>Measure</h2>
+<p>É a largura de uma linha, significando a quantidade de caracteres que contém cada linha.</p>
+<p><em>Measure</em> entre 40 e 80 caracteres para uma leitura mais agradável. O ideal é próximo de 65, mas design responsivo para adaptação de site tanto para cada tamanho de dispositivo como computadores e celulares dificulta esta restrição.</p>
+<p>Para designs de site de várias colunas, uma média melhor é entre 40 e 50 caracteres.</p>
+<h2>Leading</h2>
+<p><em>Leading</em>, o espaçamento entre linhas, muito importante para facilidade de leitura. Uma dica de como ajustar isto é o seguinte:</p>
+<ul>
+<li>Quanto maior a medida da linha (<em>Measure</em>), mais espaçamento é necessário.</li>
+<li>Quanto maior o tamanho de fonte usado, <em>menos</em> espaçamento é necessário.</li>
+</ul>
+<p>Creio que essa dica se baseia no fato que ao aumentar o tamanho da fonte também diminuimos a quantidade de caracteres possível em uma linha. Entretanto, dependendo do tamanho e resolução da tela do usuário, e também de como chegamos ao tamanho final ideal para o design da página, alguns ajustes fora dessa dica devem ser necessários.</p>
+<p><em>Leading</em> é ajustado no atributo <code>line-height</code>. Padrão é <code>normal</code>, ou 1.2. O ideal é iniciar os testes de espaçamento de linha entre 1.3 e 1.6 do tamanho da fonte. Ex.:</p>
+<div class="highlight"><pre><span></span><span class="o">*</span> <span class="p">{</span>
+    <span class="k">font-family</span><span class="p">:</span> <span class="n">Helvetica</span><span class="p">,</span> <span class="kc">sans-serif</span><span class="p">;</span>
+    <span class="k">font-size</span><span class="p">:</span> <span class="mi">1</span><span class="kt">em</span><span class="p">;</span>
+    <span class="k">line-height</span><span class="p">:</span> <span class="mf">1.3</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">//</span> <span class="nt">ou</span>
+
+<span class="o">*</span> <span class="p">{</span> <span class="k">font</span><span class="p">:</span> <span class="mi">1</span><span class="kt">em</span><span class="o">/</span><span class="mf">1.3</span> <span class="n">Helvetica</span><span class="p">,</span> <span class="kc">sans-serif</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+
+
+<h2>Escala</h2>
+<p>Não escolher tamanhos aleatoriamente, existem certas escalas que tem eficiência já comprovada:</p>
+<ul>
+<li>Escala clássica: 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 21, 24, 36, 48, 60, 72</li>
+<li>Escala Sequência de Fibonacci: 8, 13, 21, 34, 55, 89</li>
+</ul>
+<h3>Escala personalizada simples</h3>
+<p>Para criar uma escala personalizada, basta definir uma constante e utilizá-la para multiplicar o valor anterior em cada etapa de ampliação, e dividir o valor anterior em cada etapa de redução. Por exemplo, para uma escala com uma constante de <strong>1.4</strong>, o resultado seria assim:</p>
+<table>
+<thead>
+<tr>
+<th>Etapa de ampliação</th>
+<th>Valor [px]</th>
+<th>Valor [em]</th>
+<th>Cálculo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>+3</td>
+<td>54,88px</td>
+<td>2.744em</td>
+<td>[+2] * 1.4</td>
+</tr>
+<tr>
+<td>+2</td>
+<td>39,2px</td>
+<td>1.96em</td>
+<td>[+1] * 1.4</td>
+</tr>
+<tr>
+<td>+1</td>
+<td>28px</td>
+<td>1.4em</td>
+<td>[0] * 1.4</td>
+</tr>
+<tr>
+<td>0 = Tamanho de referência</td>
+<td>20px</td>
+<td>1em</td>
+<td>20px * 1</td>
+</tr>
+<tr>
+<td>-1</td>
+<td>14,28px</td>
+<td>.71em</td>
+<td>[0] / 1.4</td>
+</tr>
+<tr>
+<td>-2</td>
+<td>10,20px</td>
+<td>.51em</td>
+<td>[-1] / 1.4</td>
+</tr>
+<tr>
+<td>-3</td>
+<td>7,29px</td>
+<td>.36em</td>
+<td>[-2] / 1.4</td>
+</tr>
+</tbody>
+</table>
+<p>Existe sites que fazem este cálculo de escala automaticamente dependendo do estilo que você escolher: </p>
+<ul>
+<li><a href="http://type-scale.com">http://type-scale.com</a>;</li>
+<li><a href="https://www.modularscale.com/">https://www.modularscale.com/</a>;</li>
+</ul>
+<p>Eles até geram o código CSS para ser integrado!</p>
+<p>Escala padrão da W3C não chega a ser ruim, dá para utilizar:</p>
+<table>
+<thead>
+<tr>
+<th><code>absolute-size</code></th>
+<th>Fator de Escala</th>
+<th>Percentual</th>
+<th>Cabeçalho HTML</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>xx-large</code></td>
+<td>2/1</td>
+<td>200%</td>
+<td><code>&lt;h1&gt;</code></td>
+</tr>
+<tr>
+<td><code>x-large</code></td>
+<td>3/2</td>
+<td>150%</td>
+<td><code>&lt;h2&gt;</code></td>
+</tr>
+<tr>
+<td><code>large</code></td>
+<td>6/5</td>
+<td>120%</td>
+<td><code>&lt;h3&gt;</code></td>
+</tr>
+<tr>
+<td><code>medium</code></td>
+<td>1</td>
+<td>100%</td>
+<td><code>&lt;h4&gt;</code> e <code>&lt;p&gt;</code></td>
+</tr>
+<tr>
+<td><code>small</code></td>
+<td>8/9</td>
+<td>89%</td>
+<td><code>&lt;h5&gt;</code></td>
+</tr>
+<tr>
+<td><code>x-small</code></td>
+<td>3/4</td>
+<td>75%</td>
+<td></td>
+</tr>
+<tr>
+<td><code>xx-small</code></td>
+<td>3/5</td>
+<td>60%</td>
+<td><code>&lt;h6&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>Também podemos utilizar <code>larger</code> e <code>smaller</code> para aumentar ou diminuir uma fonte em um elemento filho de um elemento qualquer.</p>
+<h2>Fontes padrão para Web</h2>
+<p>Usar fontes carregadas via url é uma boa para ter consistência visual em todos os dispositivos, mas aumenta bastante a quantidade de dados necessários para o carregamento da página. Dar preferência para um conjunto padrão de fontes pode acelerar bastante páginas "pesadas".</p>
+<h2>Tamanho</h2>
+<p>Para definição de tamanho existem várias unidades. Unidades para medidas absolutas são:</p>
+<table>
+<thead>
+<tr>
+<th>Unidade</th>
+<th>Referência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>px</strong></td>
+<td>96 pixels por polegada (para telas modernas de alta resolução)</td>
+</tr>
+<tr>
+<td><strong>mm</strong></td>
+<td>milímetro*</td>
+</tr>
+<tr>
+<td><strong>cm</strong></td>
+<td>centímetro*</td>
+</tr>
+<tr>
+<td><strong>in</strong></td>
+<td>polegada*</td>
+</tr>
+<tr>
+<td><strong>pt</strong></td>
+<td>ponto = 1/76 de polegada = 76 pixels por polegada</td>
+</tr>
+<tr>
+<td><strong>pc</strong></td>
+<td>1pica = 12 pontos</td>
+</tr>
+</tbody>
+</table>
+<p>*<em> Tamanho final destas unidades depende do ajuste de resolução do pixel do dispositivo.</em></p>
+<p>Usar <strong>px</strong> onde apropriado (leitura digital), <strong>pt</strong> para impressão (padrão de 12pt como fonte de parágrafo).</p>
+<p>Unidades para medidas relativas são:</p>
+<table>
+<thead>
+<tr>
+<th>Unidade</th>
+<th>Referência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ch</strong></td>
+<td>Tamanho do zero (0). Medida relativa baseada na largura do caractere, não altura. Melhor usado no ajuste de fontes mono-espaçadas (fontes de programação).</td>
+</tr>
+<tr>
+<td><strong>ex</strong></td>
+<td>Altura do caractere <strong>x</strong>. Padrão é 0.5em</td>
+</tr>
+<tr>
+<td><strong>em</strong></td>
+<td>Altura do caractere <strong>M</strong> maiúsculo.  Padrão é 1em. É um multiplicador do tamanho da fonte do elemento <strong><em>superior</em></strong>; portanto é uma medida <strong>relativa</strong>.</td>
+</tr>
+<tr>
+<td><strong>rem</strong></td>
+<td>Mesmo que <strong>em</strong>, mas relativo ao elemento raiz do documento <code>html</code>.</td>
+</tr>
+<tr>
+<td><strong>cap</strong></td>
+<td>Tamanho do topo da fonte (cada fonte usa a linha de topo em relação ao tamanho do x de maneiras diferentes). Padrão é 0.5em.</td>
+</tr>
+<tr>
+<td><strong>lh</strong></td>
+<td>Valor calculado da propriedade <code>line-height</code>do elemento atual.</td>
+</tr>
+<tr>
+<td><strong>rlh</strong></td>
+<td>Valor calculado da propriedade <code>line-height</code> do elemento raiz (<code>&lt;html&gt;</code>).</td>
+</tr>
+</tbody>
+</table>
+<p>Também pode ser utilizado <strong>%</strong> para definição do tamanho da fonte <strong>em relação ao elemento superior</strong>.</p>
+<h3>Recomendações de uso de unidades</h3>
+<ul>
+<li><strong>px</strong> para o elemento raiz <code>&lt;html&gt;</code>;</li>
+<li><strong>rem</strong> para elementos onde se deseja uma escala uniforme (<code>&lt;aside&gt; e &lt;div&gt;</code> para conteúdo mais ligado à interface) e elementos adicionais ao texto principal (como notas laterais e de rodapé ajustados usando um dos elementos mencionados anteriormente);</li>
+<li><strong>em</strong> para elementos de texto (<code>&lt;h2&gt; e &lt;p&gt;</code>) e propriedades que não herdam valores (<code>margin e padding</code>);</li>
+</ul>
+<p>Um exemplo de um css que ajusta o tamanho para conteúdo padrão e para conteúdo que aparece lateralmente:</p>
+<div class="highlight"><pre><span></span><span class="c">/* Definição do tamanho base da fonte no elemento raiz */</span>
+<span class="nt">html</span> <span class="p">{</span>
+    <span class="k">font</span><span class="p">:</span> <span class="mi">16</span><span class="kt">px</span><span class="o">/</span><span class="mf">1.3</span> <span class="s2">&quot;Lucida Grande&quot;</span><span class="p">,</span> <span class="kc">sans-serif</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Ajustar escala de texto para conteúdo que não seja o principal */</span>
+<span class="nt">aside</span> <span class="p">{</span>
+    <span class="k">font</span><span class="p">:</span> <span class="mf">.9</span><span class="kt">rem</span><span class="p">;</span> <span class="c">/* em relação ao elemento raiz! */</span>
+<span class="p">}</span>
+
+<span class="c">/* Ajuste de fonte para cabeçalhos */</span>
+<span class="nt">h1</span><span class="o">,</span> <span class="nt">h2</span><span class="o">,</span> <span class="nt">h3</span><span class="o">,</span> <span class="nt">h4</span><span class="o">,</span> <span class="nt">h5</span><span class="o">,</span> <span class="nt">h6</span> <span class="p">{</span>
+    <span class="k">font-family</span><span class="p">:</span> <span class="n">Georgia</span><span class="p">,</span> <span class="kc">serif</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* Ajuste relativo dos cabeçalhos, usando 1.2 como escala personalizada */</span>
+<span class="nt">h1</span> <span class="p">{</span>
+    <span class="k">font-size</span><span class="p">:</span> <span class="mf">1.728</span><span class="kt">em</span><span class="p">;</span> <span class="c">/* Em relação ao elemento pai/superior */</span>
+<span class="p">}</span>
+<span class="nt">h2</span> <span class="p">{</span>
+    <span class="k">font-size</span><span class="p">:</span> <span class="mf">1.44</span><span class="kt">em</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">h3</span> <span class="p">{</span>
+    <span class="k">font-size</span><span class="p">:</span> <span class="mf">1.2</span><span class="kt">em</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">h4</span><span class="o">,</span> <span class="nt">p</span> <span class="p">{</span>
+    <span class="k">font-size</span><span class="p">:</span> <span class="mi">1</span><span class="kt">em</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">h5</span> <span class="p">{</span>
+    <span class="k">font-size</span><span class="p">:</span> <span class="mf">.833</span><span class="kt">em</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">h6</span> <span class="p">{</span>
+    <span class="k">font-size</span><span class="p">:</span> <span class="mf">.694</span><span class="kt">em</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2>Estilo de fonte</h2>
+<p>Usando <code>font-family</code> selecionamos qual fonte usar. Uma lista de nomes define uma ordem de prioridade, e o navegador usará a primeira fonte encontrada na lista.</p>
+<p>Famílias de fontes sem-serifa normalmente utilizadas que existem por padrão nos sistemas operacionais:</p>
+<ul>
+<li><code>-apple-system</code>: para Safari e iOS (usa a San Francisco);</li>
+<li><code>BlinkMacSystemFont</code>: Safari e iOS (San Francisco);</li>
+<li><code>"Segoe UI"</code>: Windows;</li>
+<li><code>Roboto</code>: Android;</li>
+<li><code>"Helvetica Neue", Arial, sans-serif</code> : caso as outras não sejam encontradas;</li>
+<li><code>"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"</code> : fontes para emoji;</li>
+</ul>
+<h3>Combinação de estilos de fonte</h3>
+<p>Em primeiro lugar, se perguntar se realmente se faz necessário utilizar mais de uma fonte. Obviamente, a fonte utilizada para código-fonte vai ser diferente por ser um caso específico, mas para todo o resto, experimentar primeiramente com apenas uma única família de fonte.</p>
+<p>Caso seja mais interessante utilizar mais de uma família de fonte:</p>
+<ul>
+<li>Para escolha de estilos de fonte para corpo de texto e cabeçalhos, uma boa dica é misturar fontes serifadas com sem-serifas. Então, se o corpo do texto for serifada, usar sem-serifas para títulos, e vice-versa.</li>
+<li>Procurar por fontes que tenham a mesma altura de <strong>x</strong>. Isso facilita encontrar uma harmonia em comum entre as fontes, principalmente se a dica anterior não for seguida e se tente utilizar fontes do mesmo tipo tanto no corpo de texto quanto no cabeçalho.</li>
+<li>Procurar fontes do mesmo autor, já que isso facilita manter consistência de estilo.</li>
+<li>Procurar fontes da mesma época de criação, pelo mesmo motivo do item anterior.</li>
+<li>Há também famílias que oferecem versões com e sem serifas, o que é ótimo para a combinação assimétrica.</li>
+</ul>
+<p>Site para auxiliar a encontrar combinação de fontes: <a href="https://www.canva.com/font-combinations/">https://www.canva.com/font-combinations/</a>.</p>
+<h2>Cor</h2>
+<p>Se quiser usar a cor da fonte atual em outro atributo (como <code>background-color</code>), pode usar o nome de cor <code>currentcolor</code>.</p>
+<h2>Definição de fonte em uma linha</h2>
+<div class="highlight"><pre><span></span><span class="o">*</span> <span class="p">{</span>
+    <span class="k">font</span><span class="p">:</span> <span class="p">[</span><span class="k">font-weight</span><span class="p">]</span> <span class="p">[</span><span class="k">font-style</span><span class="p">]</span> <span class="p">[</span><span class="k">font-variant</span><span class="p">]</span> <span class="p">[</span><span class="k">font-size</span><span class="p">[</span><span class="o">/</span><span class="k">line-height</span><span class="p">]]</span> <span class="k">font-family</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Aqui, apenas <code>normal</code> ou <code>small-caps</code> podem ser definidas em <code>font-variant</code>.</p>
+<h2>Alinhamento de texto</h2>
+<p>As recomendações da W3C são de texto alinhado à esquerda.</p>
+<p>Caso seja necessário justificar, existem novas opções no CSS3, em navegadores modernos; O atributo <code>text-justify</code> que pode ser ajustado com <code>inter-word</code>, onde o espaçamento necessário para justificação é feita de modo simples, apenas aumentando o espaço entre as palavras, ou <code>inter-character</code> onde além do ajuste entre palavras, é feito ajuste entre caracteres.</p>
+<p>Outro atributo interessante para melhorar a justificação é <code>hyphenate: auto</code> para fazer a hifenização automática das palavras. Infelizmente, dependendo da implementação do navegador, isso pode acarretar em erros de ortografia.</p>
+<h2>Espaçamento vertical de elementos de texto</h2>
+<p>O espaçamento vertical determina o ritmo de leitura do texto, sendo o equilíbrio entre espaço com texto e espaço em branco. É extremamente importante para que o texto seja de leitura fácil e agradável.</p>
+<p>A adição mais comum de espaço em branco é entre os elementos de texto, principalmente entre parágrafos. Ao ajustar as margens superiores e inferiores desses elementos, o ideal é utilizar unidades relativas (<strong>em</strong>), para melhor ajuste quando o tamanho do texto for alterado pelo usuário ou pelo dispositivo. Lembrando que <strong>em</strong> é a altura <strong><em>relativa ao tamanho de fonte do pai do elemento atual</em></strong>.</p>
+<p>No caso de sequência de parágrafos, para manter o ritmo de texto como num livro, o ideal é ajustar as margens para o mesmo valor de altura de linha.</p>
+<div class="highlight"><pre><span></span><span class="nt">p</span> <span class="p">{</span>
+    <span class="k">line-height</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">;</span>
+    <span class="k">margin-top</span><span class="p">:</span> <span class="mf">1.5</span><span class="kt">em</span><span class="p">;</span>
+    <span class="k">margin-bottom</span><span class="p">:</span> <span class="mf">1.5</span><span class="kt">em</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>O mesmo é válido para cabeçalhos, mas também há a possibilidade de um ajuste mais estilizado, de forma assimétrica. Neste caso, ao aumentar o valor de uma margem, a mesma quantidade deverá ser reduzida da outra margem.</p>
+<div class="highlight"><pre><span></span><span class="c">/* ajuste simétrico do h2 */</span>
+<span class="nt">h2</span> <span class="p">{</span>
+    <span class="k">line-height</span><span class="p">:</span> <span class="mf">1.3</span><span class="p">;</span>
+    <span class="k">margin-top</span><span class="p">:</span> <span class="mf">1.3</span><span class="kt">em</span><span class="p">;</span>
+    <span class="k">margin-bottom</span><span class="p">:</span> <span class="mf">1.3</span><span class="kt">em</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* ajuste assimétrico do h2 */</span>
+<span class="nt">h2</span> <span class="p">{</span>
+    <span class="k">line-height</span><span class="p">:</span> <span class="mf">1.3</span><span class="p">;</span>
+    <span class="k">margin-top</span><span class="p">:</span> <span class="mf">1.8</span><span class="kt">em</span><span class="p">;</span> <span class="c">/* adição de .5em */</span>
+    <span class="k">margin-bottom</span><span class="p">:</span> <span class="mf">.8</span><span class="kt">em</span><span class="p">;</span> <span class="c">/* redução de .5em */</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>O padrão dos navegadores é tratar as margens dos parágrafos como 1em, portanto não devemos deixar as margens dos elementos principais de texto no padrão.</p>
+<p>Um ótimo site para auxiliar no cálculo destes valores para um belo alinhamento de texto é <a href="https://nowodzinski.pl/syncope/">https://nowodzinski.pl/syncope/</a></p>
+<h3>Notas laterais</h3>
+<p>Para texto lateral como notas laterais e notas de rodapé, fica mais elegante manter o ritmo de texto similar ao do texto principal. Geralmente, aumentar a altura do espaçamento de linha (<code>line-height</code>) proporcionalmente à diferença de tamanho de fonte. Por exemplo, se o tamanho da fonte principal for 12px e o tamanho da fonte das notas for 10px, teremos que aumentar o espaçamento de linha das notas em 12/10. Neste caso, se o espaçamento do texto padrão for 1.5, o espaçamento das notas será 1.8 (1.5 * 12/10).</p>
+<p>Com esse ajuste, nós podemos manter a mesma grade de texto mesmo quando alteramos o tamanho da fonte.</p>
+<h2>Referências</h2>
+<ul>
+<li><a href="http://files.granneman.com/presentations/webdev/CSS-Typography.pdf">CSS Typography - Granneman</a>;</li>
+<li><a href="http://webtypography.net">Web Typography</a>;</li>
+<li><a href="https://betterwebtype.com/articles/2018/08/15/guide-to-combining-fonts/">"Guide to Combining Fonts"  - Matej Latin</a>;</li>
+</ul>
+    <footer class="article_info">
+      <summary>Informações do artigo:</summary>
+      <p><time class="published" datetime="2019-06-12T00:00:00-03:00">
+        Publicado em: qua 12 junho 2019
+      </time></p>
+      <address class="vcard author">
+        Autor:             <a href="/author/rafael-fernandes.html">Rafael Fernandes</a>
+      </address>
+      <p class="category">
+          Categoria: <a href="/category/notas.html">Notas</a>
+      </p>
+      <p class="tags">
+          Tags:
+              <a href="/tag/web-design.html">Web Design</a>
+      </p>
+      <p class="extrainfo">Permalink: <a href="/notas/notas-sobre-tipografia-para-web-design/">/notas/notas-sobre-tipografia-para-web-design/</a></p>
+    </footer><!-- /.post-info -->
+  </article>
+</main>
+
+  <footer id="site_footer" class="background">
+    <p>
+      <a href="http://twitter.com/ragatol" rel="bookmark"><img src="https://twitter.com/favicon.ico"> twitter</a> 
+      <a href="http://github.com/ragatol" rel="bookmark"><img src="https://github.com/favicon.ico"> github</a>
+    </p>
+    <p>&copy; 2016 Rafael Fernandes</p>
+  </footer><!-- /#contentinfo -->
+</body>
+</html>

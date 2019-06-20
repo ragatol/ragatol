@@ -10,6 +10,7 @@
   <link rel="stylesheet" type="text/css" href="/theme/codehighlight.css">
 	
 
+    <meta name="description" content="Algumas anotações e experimentos enquanto estudo sobre tipografia para Web. Um pouco desarrumado para ser considerado um artigo, mas ainda assim bastante útil. Atualizado eventualmente para adição/atualização de informações." />
 
     <meta name="tags" content="Web Design" />
 
@@ -37,6 +38,18 @@
 <p>É a largura de uma linha, significando a quantidade de caracteres que contém cada linha.</p>
 <p><em>Measure</em> entre 40 e 80 caracteres para uma leitura mais agradável. O ideal é próximo de 65, mas design responsivo para adaptação de site tanto para cada tamanho de dispositivo como computadores e celulares dificulta esta restrição.</p>
 <p>Para designs de site de várias colunas, uma média melhor é entre 40 e 50 caracteres.</p>
+<p>Se utilizarmos a unidade de medida <strong>ch</strong> para definição da largura de um contêiner de texto, podemos fazer a largura da linha em uma medida próxima à quantidade de caracteres, como por exemplo:</p>
+<div class="highlight"><pre><span></span><span class="nt">main</span> <span class="p">{</span>
+    <span class="k">max-width</span><span class="p">:</span> <span class="mi">65</span><span class="kt">ch</span><span class="p">;</span>
+    <span class="k">margin-left</span><span class="p">:</span> <span class="kc">auto</span><span class="p">;</span>
+    <span class="k">margin-right</span><span class="p">:</span> <span class="kc">auto</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>No exemplo acima, forçamos todo o conteúdo dentro da tag <code>main</code> a ter no máximo 65 caracteres <strong>0</strong> de largura máxima, ajustando as margens automaticamente. Como o tamanho é baseado em um caractere específico, uma linha com vários caracteres de largura fina, como <strong>i</strong>, fará que a quantidade real seja maior, mas é uma boa aproximação.</p>
+<p>Outra maneira de ter uma aproximação do tamanho da linha é definir a largura do contêiner em <strong>px</strong>, e então dividir pelo tamanho da fonte básica, também em <strong>px</strong>.</p>
+<p>Usando <strong>em</strong> para ajustar a largura do contêiner também é possível. Cada caractere usa aproximadamente <strong>0.5em</strong> de espaço horizontal, portanto um ajuste de <strong>33em</strong> faria com que o contêiner se ajustasse para uma largura de linha de aproximadamente 66 caracteres. Um ponto bom de se utilizar este método é que ele se ajusta automaticamente ao tamanho da fonte. Este método é preferível no ponto de vista tipográfico, já que mantêm o relacionamento entre o tamanho da linha e o tamanho da fonte.</p>
 <h2>Leading</h2>
 <p><em>Leading</em>, o espaçamento entre linhas, muito importante para facilidade de leitura. Uma dica de como ajustar isto é o seguinte:</p>
 <ul>
@@ -64,58 +77,58 @@
 <li>Escala Sequência de Fibonacci: 8, 13, 21, 34, 55, 89</li>
 </ul>
 <h3>Escala personalizada simples</h3>
-<p>Para criar uma escala personalizada, basta definir uma constante e utilizá-la para multiplicar o valor anterior em cada etapa de ampliação, e dividir o valor anterior em cada etapa de redução. Por exemplo, para uma escala com uma constante de <strong>1.4</strong>, o resultado seria assim:</p>
+<p>Para criar uma escala personalizada, basta definir uma constante e utilizá-la para multiplicar o tamanho base, elevando essa constante primeiro pela etapa de escala. Por exemplo, para uma escala com uma constante de <strong>1.4</strong>, o resultado seria assim:</p>
 <table>
 <thead>
 <tr>
 <th>Etapa de ampliação</th>
-<th>Valor [px]</th>
-<th>Valor [em]</th>
-<th>Cálculo</th>
+<th align="center">Valor [px]</th>
+<th align="center">Valor [em]</th>
+<th align="right">Cálculo</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>+3</td>
-<td>54,88px</td>
-<td>2.744em</td>
-<td>[+2] * 1.4</td>
+<td>3</td>
+<td align="center">54,88px</td>
+<td align="center">2.744em</td>
+<td align="right">20px * 1.4^3</td>
 </tr>
 <tr>
-<td>+2</td>
-<td>39,2px</td>
-<td>1.96em</td>
-<td>[+1] * 1.4</td>
+<td>2</td>
+<td align="center">39,2px</td>
+<td align="center">1.96em</td>
+<td align="right">20px * 1.4^2</td>
 </tr>
 <tr>
-<td>+1</td>
-<td>28px</td>
-<td>1.4em</td>
-<td>[0] * 1.4</td>
+<td>1</td>
+<td align="center">28px</td>
+<td align="center">1.4em</td>
+<td align="right">20px * 1.4^1</td>
 </tr>
 <tr>
 <td>0 = Tamanho de referência</td>
-<td>20px</td>
-<td>1em</td>
-<td>20px * 1</td>
+<td align="center">20px</td>
+<td align="center">1em</td>
+<td align="right">20px * 1.4^0</td>
 </tr>
 <tr>
 <td>-1</td>
-<td>14,28px</td>
-<td>.71em</td>
-<td>[0] / 1.4</td>
+<td align="center">14,28px</td>
+<td align="center">.71em</td>
+<td align="right">20px * 1.4^-1</td>
 </tr>
 <tr>
 <td>-2</td>
-<td>10,20px</td>
-<td>.51em</td>
-<td>[-1] / 1.4</td>
+<td align="center">10,20px</td>
+<td align="center">.51em</td>
+<td align="right">20px * 1.4^-2</td>
 </tr>
 <tr>
 <td>-3</td>
-<td>7,29px</td>
-<td>.36em</td>
-<td>[-2] / 1.4</td>
+<td align="center">7,29px</td>
+<td align="center">.36em</td>
+<td align="right">20px * 1.4^-3</td>
 </tr>
 </tbody>
 </table>
@@ -181,8 +194,6 @@
 </tbody>
 </table>
 <p>Também podemos utilizar <code>larger</code> e <code>smaller</code> para aumentar ou diminuir uma fonte em um elemento filho de um elemento qualquer.</p>
-<h2>Fontes padrão para Web</h2>
-<p>Usar fontes carregadas via url é uma boa para ter consistência visual em todos os dispositivos, mas aumenta bastante a quantidade de dados necessários para o carregamento da página. Dar preferência para um conjunto padrão de fontes pode acelerar bastante páginas "pesadas".</p>
 <h2>Tamanho</h2>
 <p>Para definição de tamanho existem várias unidades. Unidades para medidas absolutas são:</p>
 <table>
@@ -211,7 +222,7 @@
 </tr>
 <tr>
 <td><strong>pt</strong></td>
-<td>ponto = 1/76 de polegada = 76 pixels por polegada</td>
+<td>ponto = 1/76 de polegada = 76 pontos por polegada</td>
 </tr>
 <tr>
 <td><strong>pc</strong></td>
@@ -219,8 +230,8 @@
 </tr>
 </tbody>
 </table>
-<p>*<em> Tamanho final destas unidades depende do ajuste de resolução do pixel do dispositivo.</em></p>
-<p>Usar <strong>px</strong> onde apropriado (leitura digital), <strong>pt</strong> para impressão (padrão de 12pt como fonte de parágrafo).</p>
+<p><em>* Tamanho final destas unidades depende do ajuste de resolução do pixel do dispositivo.</em></p>
+<p>Usar <strong>px</strong> onde apropriado (leitura digital, 16px geralmente é o padrão em navegadores), <strong>pt</strong> para impressão (padrão de 12pt).</p>
 <p>Unidades para medidas relativas são:</p>
 <table>
 <thead>
@@ -232,7 +243,7 @@
 <tbody>
 <tr>
 <td><strong>ch</strong></td>
-<td>Tamanho do zero (0). Medida relativa baseada na largura do caractere, não altura. Melhor usado no ajuste de fontes mono-espaçadas (fontes de programação).</td>
+<td>Tamanho horizontal do zero (0). Medida relativa baseada na largura do caractere, não altura. Melhor usado no ajuste de fontes mono-espaçadas (fontes de programação). Também pode ser usado no ajuste de largura de contêiner de conteúdo para forçar uma largura de linha aproximada pré-definida.</td>
 </tr>
 <tr>
 <td><strong>ex</strong></td>
@@ -240,32 +251,33 @@
 </tr>
 <tr>
 <td><strong>em</strong></td>
-<td>Altura do caractere <strong>M</strong> maiúsculo.  Padrão é 1em. É um multiplicador do tamanho da fonte do elemento <strong><em>superior</em></strong>; portanto é uma medida <strong>relativa</strong>.</td>
+<td>Altura do caractere <strong>M</strong> maiúsculo.  Padrão é 1em.</td>
 </tr>
 <tr>
 <td><strong>rem</strong></td>
-<td>Mesmo que <strong>em</strong>, mas relativo ao elemento raiz do documento <code>html</code>.</td>
+<td>Mesmo que <strong>em</strong>, mas <strong>relativo ao elemento raiz do documento</strong> <code>html</code>.</td>
 </tr>
 <tr>
 <td><strong>cap</strong></td>
-<td>Tamanho do topo da fonte (cada fonte usa a linha de topo em relação ao tamanho do x de maneiras diferentes). Padrão é 0.5em.</td>
+<td>Tamanho do topo da fonte (cada fonte usa a linha de topo em relação ao tamanho do x de maneiras diferentes). Padrão é 0.5em. <strong>CSS4</strong>.</td>
 </tr>
 <tr>
 <td><strong>lh</strong></td>
-<td>Valor calculado da propriedade <code>line-height</code>do elemento atual.</td>
+<td>Valor calculado da propriedade <code>line-height</code>do elemento atual. <strong>CSS4</strong>.</td>
 </tr>
 <tr>
 <td><strong>rlh</strong></td>
-<td>Valor calculado da propriedade <code>line-height</code> do elemento raiz (<code>&lt;html&gt;</code>).</td>
+<td>Valor calculado da propriedade <code>line-height</code> do elemento raiz (<code>&lt;html&gt;</code>). <strong>CSS4</strong>.</td>
 </tr>
 </tbody>
 </table>
 <p>Também pode ser utilizado <strong>%</strong> para definição do tamanho da fonte <strong>em relação ao elemento superior</strong>.</p>
+<p>Quando as unidades <strong>relativas</strong> são utilizadas no atributo <code>font-size</code>, o tamanho usado como referência é do <strong>elemento superior</strong>, quer dizer, o elemento html que contém o elemento atual. Nos outros atributos, as unidades relativas se referem ao tamanho de fonte calculado no <strong>elemento atual</strong>.</p>
 <h3>Recomendações de uso de unidades</h3>
 <ul>
-<li><strong>px</strong> para o elemento raiz <code>&lt;html&gt;</code>;</li>
-<li><strong>rem</strong> para elementos onde se deseja uma escala uniforme (<code>&lt;aside&gt; e &lt;div&gt;</code> para conteúdo mais ligado à interface) e elementos adicionais ao texto principal (como notas laterais e de rodapé ajustados usando um dos elementos mencionados anteriormente);</li>
-<li><strong>em</strong> para elementos de texto (<code>&lt;h2&gt; e &lt;p&gt;</code>) e propriedades que não herdam valores (<code>margin e padding</code>);</li>
+<li><strong>px</strong> ou <strong>%</strong> para o elemento raiz <code>&lt;html&gt;</code>; Isso permite que o usuário tenha a opção de fazer a escala do texto em seu dispositivo, e assim isso serve apenas de ponto de referência para o cálculo de tamanho dos outros elementos de texto. Evitar criar layouts dependentes de tamanho específico de fonte.</li>
+<li><strong>rem</strong> para elementos onde se deseja uma escala uniforme (<code>&lt;aside&gt;</code> e <code>&lt;div&gt;</code> para conteúdo mais ligado à interface) e elementos adicionais ao texto principal (como notas laterais e de rodapé ajustados usando um dos elementos mencionados anteriormente);</li>
+<li><strong>em</strong> para elementos de texto (<code>&lt;h2&gt;</code> e <code>&lt;p&gt;</code>) e propriedades que não herdam valores (<code>margin</code> e <code>padding</code>);</li>
 </ul>
 <p>Um exemplo de um css que ajusta o tamanho para conteúdo padrão e para conteúdo que aparece lateralmente:</p>
 <div class="highlight"><pre><span></span><span class="c">/* Definição do tamanho base da fonte no elemento raiz */</span>
@@ -316,8 +328,88 @@
 <li><code>"Helvetica Neue", Arial, sans-serif</code> : caso as outras não sejam encontradas;</li>
 <li><code>"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"</code> : fontes para emoji;</li>
 </ul>
+<p>Tabela de combinações comuns de fontes que são similares e instaladas por padrão tanto em Windows quanto em OSX:</p>
+<ul>
+<li>Arial, Helvetica, sans-serif;</li>
+<li>Arial Black, Gadget, sans-serif;</li>
+<li>"Comic Sans", "Comic Sans MS", cursive;</li>
+<li>Courier New, monospace;</li>
+<li>Georgia, serif;</li>
+<li>Impact, Charcoal, sans-serif;</li>
+<li>"Lucida Console", Monaco, monospace;</li>
+<li>"Palatino Linotype", "Book Antiqua", Palatino, serif;</li>
+<li>Tahoma, Geneva, sans-serif;</li>
+<li>"Times New Roman", Times, serif;</li>
+<li>Verdana, Geneva, sans-serif;</li>
+<li>"Trebuchet MS", sans-serif;</li>
+<li>Consolas, Monaco, monospace;</li>
+</ul>
+<p>Sites com a lista de fontes de cada sistema operacional:</p>
+<ul>
+<li>Windows: <a href="https://docs.microsoft.com/pt-br/typography/font-list/index">https://docs.microsoft.com/pt-br/typography/font-list/index</a>;</li>
+<li>OSX: <a href="https://en.wikipedia.org/wiki/List_of_typefaces_included_with_macOS">https://en.wikipedia.org/wiki/List_of_typefaces_included_with_macOS</a>;</li>
+<li>iOS: <a href="https://iosfontlist.com/#availability=10.0&amp;preinstalled">https://iosfontlist.com/#availability=10.0&amp;preinstalled</a>;</li>
+</ul>
+<p>Fontes disponíveis por padrão no Android:</p>
+<table>
+<thead>
+<tr>
+<th>Família</th>
+<th>Tipo</th>
+<th>Versão do Android</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Droid Sans</td>
+<td>sans-serif</td>
+<td>4.0+</td>
+</tr>
+<tr>
+<td>Droid Serif</td>
+<td>serif</td>
+<td>4.0+</td>
+</tr>
+<tr>
+<td>Droid Sans Mono</td>
+<td>monospace</td>
+<td>4.0+</td>
+</tr>
+<tr>
+<td>Roboto</td>
+<td>sans-serif</td>
+<td>4.1+</td>
+</tr>
+<tr>
+<td>Noto Sans</td>
+<td>sans-serif</td>
+<td>5.0+</td>
+</tr>
+<tr>
+<td>Noto Serif</td>
+<td>serif</td>
+<td>5.0+</td>
+</tr>
+<tr>
+<td>Cutive Mono</td>
+<td>monospace</td>
+<td>5.0+</td>
+</tr>
+<tr>
+<td>Coming Soon (estilo Comic Sans)</td>
+<td>cursive</td>
+<td>5.0+</td>
+</tr>
+</tbody>
+</table>
+<p>Difícil saber o que teria de padrão em Linux pois não há padrão entre as distribuições.</p>
+<p>Lista de fontes "seguras" para web: <a href="https://www.w3schools.com/cssref/css_websafe_fonts.asp">https://www.w3schools.com/cssref/css_websafe_fonts.asp</a>.</p>
+<p>Ideal é criar um design de layout que não dependa tanto da família de fonte desejada, mas se for extremamente importante manter a mesma família na maioria dos dispositivos, usar <a href="https://fonts.google.com">Google Fonts</a>, <a href="https://www.fontsquirrel.com">Font Squirrel</a> ou serviço similar.</p>
+<p>Usar fontes carregadas via url é uma boa para ter consistência visual em todos os dispositivos, mas aumenta bastante a quantidade de dados necessários para o carregamento da página. Dar preferência para um conjunto padrão de fontes pode acelerar bastante páginas "pesadas".</p>
+<p>Note que mesmo assim ainda há a possibilidade de não ser utilizada a mesma família que a desejada, tanto por limitação do navegador ou sistema utilizado pelo usuário, quanto por configurações personalizadas pelo próprio usuário por questões de acessibilidade.</p>
 <h3>Combinação de estilos de fonte</h3>
 <p>Em primeiro lugar, se perguntar se realmente se faz necessário utilizar mais de uma fonte. Obviamente, a fonte utilizada para código-fonte vai ser diferente por ser um caso específico, mas para todo o resto, experimentar primeiramente com apenas uma única família de fonte.</p>
+<p>Claro que se for desejável criar uma lista de nomes de fontes para ajustar no CSS de uma maneira que seja encontrada uma fonte similar para cada sistema, será utilizada mais de uma fonte. Mas a questão aqui é puramente estética, no intuito de se evitar um carnaval de fontes no design do site.</p>
 <p>Caso seja mais interessante utilizar mais de uma família de fonte:</p>
 <ul>
 <li>Para escolha de estilos de fonte para corpo de texto e cabeçalhos, uma boa dica é misturar fontes serifadas com sem-serifas. Então, se o corpo do texto for serifada, usar sem-serifas para títulos, e vice-versa.</li>
@@ -372,6 +464,31 @@
 
 <p>O padrão dos navegadores é tratar as margens dos parágrafos como 1em, portanto não devemos deixar as margens dos elementos principais de texto no padrão.</p>
 <p>Um ótimo site para auxiliar no cálculo destes valores para um belo alinhamento de texto é <a href="https://nowodzinski.pl/syncope/">https://nowodzinski.pl/syncope/</a></p>
+<h3>Grade de ritmo vertical</h3>
+<p>Para um cálculo básico do tamanho de altura de linha e margens que se encaixam em uma grade de ritmo vertical, calcularíamos em múltiplos do tamanho da linha base.</p>
+<p>Se, por exemplo, tivermos definido que o tamanho da fonte base seja 20px, e a altura de linha 1.5, então a altura de linha base será 30px (20 * 1.5).</p>
+<p>Em seguida, calculamos o tamanho da fonte do elemento em questão: por exemplo, um cabeçalho de 1.4em seria 28px (20 * 1.4).</p>
+<div class="highlight"><pre><span></span><span class="nt">html</span> <span class="p">{</span>
+    <span class="k">font</span><span class="p">:</span> <span class="mi">20</span><span class="kt">px</span><span class="o">/</span><span class="mf">1.5</span> <span class="kc">sans-serif</span><span class="p">;</span> <span class="c">/* altura de linha de 30px */</span>
+<span class="p">}</span>
+
+<span class="nt">h3</span> <span class="p">{</span>
+    <span class="k">font-size</span><span class="p">:</span> <span class="mf">1.4</span><span class="kt">em</span><span class="p">;</span> <span class="c">/* 28px */</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Assumindo que gostaríamos de um <code>h3</code>que ocupasse 2 linhas da altura base para cada linha própria, com 2 linhas base de margem superior e 1 linha base de margem inferior, o resultado seria assim:</p>
+<div class="highlight"><pre><span></span><span class="nt">h3</span> <span class="p">{</span>
+    <span class="k">font-size</span><span class="p">:</span> <span class="mf">1.4</span><span class="kt">em</span><span class="p">;</span> <span class="c">/* 28px */</span>
+    <span class="k">line-height</span><span class="p">:</span> <span class="mf">1.867</span><span class="kt">em</span><span class="p">;</span> <span class="c">/* (28/30) * 2 */</span>
+    <span class="k">margin-top</span><span class="p">:</span> <span class="mf">1.867</span><span class="kt">em</span><span class="p">;</span> <span class="c">/* (28/30) * 2 */</span>
+    <span class="k">margin-bottom</span><span class="p">:</span> <span class="mf">0.933</span><span class="kt">em</span><span class="p">;</span> <span class="c">/*(28/30) * 1 */</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Como demonstrado, as alturas de linha e margem são calculados de acordo com o tamanho de fonte do elemento atual.</p>
 <h3>Notas laterais</h3>
 <p>Para texto lateral como notas laterais e notas de rodapé, fica mais elegante manter o ritmo de texto similar ao do texto principal. Geralmente, aumentar a altura do espaçamento de linha (<code>line-height</code>) proporcionalmente à diferença de tamanho de fonte. Por exemplo, se o tamanho da fonte principal for 12px e o tamanho da fonte das notas for 10px, teremos que aumentar o espaçamento de linha das notas em 12/10. Neste caso, se o espaçamento do texto padrão for 1.5, o espaçamento das notas será 1.8 (1.5 * 12/10).</p>
 <p>Com esse ajuste, nós podemos manter a mesma grade de texto mesmo quando alteramos o tamanho da fonte.</p>

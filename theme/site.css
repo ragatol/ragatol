@@ -1,8 +1,12 @@
-body {
-	font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+html {
+	font-family: Verdana, sans-serif;
 	background-color: white;
 	color: #063a60;
-	font-size: 1em;
+	font-size: 16px;
+	line-height: 1.5;
+}
+
+body {
 	margin: 0px;
 	padding: 0px;
 	font-size-adjust: 100%;
@@ -11,19 +15,22 @@ body {
 	-webkit-text-size-adjust: 100%;
 }
 code {
-	font-family: 'Roboto Mono', monospace;
+	font-family: Consolas, monospace;
 	line-height: 1.5;
 	font-size: 1em;
 }
 @media screen and (min-width: 800px), screen and (min-height: 800px) {
 	body {
-		font-size: 1.2em;
+		font-size: 20px;
 	}
 	pre code {
 		font-size: .9em;
 	}
 }
 pre {
+    font-size: 0.900em;
+    margin-top: 2.000em;
+    margin-bottom: 2.000em;
 	padding: 1em;
 	overflow: auto;
 	border-radius: 0.3em;
@@ -40,7 +47,7 @@ pre {
 main {
 	min-height: 78vh;
 	padding: 10px;
-	max-width: 1280px;
+	max-width: 65ch;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -52,45 +59,80 @@ a:hover {
 	text-decoration: underline;
 }
 p {
-	line-height: 2;
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
 }
-:not(li) > p {
-	text-indent: 1.5em;
+/* escala dos headers */
+aside {
+        font-size: 0.900em;
+        line-height: 2.000;
 }
-
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Ubuntu Condensed', sans-serif;
-	font-weight: bold;
+    font-family: Verdana, sans-serif;
 	color: #09568d;
 	text-shadow: 1px 1px 3px #b0aaad;
-	font-size: 2em;
 }
 h1 {
-	text-align: center;
+    font-size: 2.856em;
+    line-height: 1.260;
+    margin-top: 1.260em;
+    margin-bottom: 1.260em;
+}
+h2 {
+    font-size: 2.197em;
+    line-height: 1.639;
+    margin-top: 1.639em;
+    margin-bottom: 0.819em;
+}
+h3 {
+    font-size: 1.690em;
+    line-height: 2.130;
+    margin-top: 1.065em;
+    margin-bottom: 1.065em;
+}
+h4 {
+    font-size: 1.300em;
+    line-height: 2.769;
+    margin-top: 1.385em;
+    margin-bottom: 1.385em;
+}
+h5 {
+    font-size: 1.000em;
+    line-height: 1.800;
+    margin-top: 1.800em;
+    margin-bottom: 1.800em;
+}
+h6 {
+    font-size: 0.769em;
+    line-height: 2.340;
+    margin-top: 2.340em;
+    margin-bottom: 2.340em;
 }
 article h1 {
 	text-align: center;
 	border-bottom: 1px solid #09568d;
-	width: 60%;
-	margin-left: auto;
-	margin-right: auto;
-	padding-bottom: 1em;
-	margin-bottom: 1em;
-}
-h2 {
-	font-size: 1.6em;
 }
 article h2 {
 	border-bottom: 1px solid #ddd;
 	padding-bottom: 5px;
 }
-h3 {
-	font-size: 1.3em;
-}
-h4 {
-	font-size: 1em;
-}
 
+/* tabelas */
+table {
+	width: 100%;
+	margin: 1.5em 0em;
+	border-collapse: collapse;
+}
+thead {
+	color: #09568d;
+    text-shadow: 1px 1px 2px #b0aaad;
+}
+td {
+	margin: 0px;
+	padding: .25em;
+	border: 1px solid black;
+}
+/* outros elementos visuais */
 hr {
 	clear: both;
 	border: none;
@@ -265,16 +307,19 @@ article aside {
 }
 #site_header h6 {
 	font-weight: bold;
-	font-size: 25px;
+	font-size: 1.2em;
+	line-height: 1;
 	margin: 7px;
 	padding-top: 0px;
 	color: white;
-	text-align: left;
+	text-align: center;
 	text-shadow: 2px 2px 2px black;
 }
 #site_header ul {
 	margin: 0px;
 	padding: 0px;
+	font-size: 1.2em;
+	line-height: 1;
 }
 @media screen and (min-width: 800px) {
 	#site_header ul {

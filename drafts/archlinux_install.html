@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <title>Rafael Fernandes - Minha Instalação de Arch Linux</title>
+  <meta charset="utf-8" />
+  <!-- link para outros arquivos do thema (css e javascript) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans%7CRoboto+Mono%7CUbuntu+Condensed" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/theme/site.css">
+  <link rel="stylesheet" type="text/css" href="/theme/codehighlight.css">
+	
+
+    <meta name="description" content="Como faço minha instalação de Arch Linux e como a personalizo para ficar da maneira que gosto." />
+
+    <meta name="tags" content="Linux" />
+    <meta name="tags" content="Arch" />
+
+</head>
+<body>
+  <header id="site_header" class="background  ">
+    <div class="sitewidth">
+    <h6><a href="/">Rafael Fernandes</a></h6>
+    <nav id="topmenu"><ul>
+      <li><a href="/category/artigos.html">Artigos</a></li>
+      <li class="active"><a href="/category/notas.html">Notas</a></li>
+      <li><a href="/category/projetos.html">Projetos</a></li>
+      <li><a href="/about/">Sobre</a></li>
+    </ul></nav><!-- /#menu -->
+    </div>
+  </header>
+
+  <!-- Page content -->
+<main class="article_page">
+  <article>
+    
+    <h1>Minha Instalação de Arch Linux</h1>
+<p>Terminando de fazer o boot pelo dispositivo que tem a imagem de instalação, fazer a preparação do ambiente de instalação, ajustando o layout de teclado:</p>
+<div class="highlight"><pre><span></span># loadkeys br-abnt
+</pre></div>
+
+
+<p>Depois, confirmar o horário para o sistema:</p>
+<div class="highlight"><pre><span></span># timedatectl set-ntp true
+</pre></div>
+
+
+<p>Bom agora é particionar.</p>
+<h2>Particionamento</h2>
+<p>Pra começar, verificar o nome dos discos disponíveis no sistema para sabermos qual é que vamos utilizar.</p>
+<div class="highlight"><pre><span></span># lsblk
+</pre></div>
+
+
+<p>Anotando o nome do seu disco (aqui assumiremos que seja <strong>/dev/sda</strong>), é só usar o cfdisk:</p>
+<div class="highlight"><pre><span></span># cfdisk /dev/sda
+</pre></div>
+
+
+<p>Escolher entre <strong>gpt</strong> ou <strong>DOS (mbr)</strong> dependendo do ajuste de boot de bios, e daí criar as partições:</p>
+<ul>
+<li>Caso seja boot EFI e disco em GPT, criar uma partição entre 256 e 512 MB fat32 para o bootloader EFI;</li>
+<li>Criar uma partição o o restante do espaço para o sistema;</li>
+</ul>
+<p>O <strong>cfdisk</strong> é em forma de menu então é tranquilo.</p>
+<p>Daí particionar as partições:</p>
+<ul>
+<li>Para a partição EFI: <code>mkfs.fat32 /dev/sdaX</code> ;</li>
+<li>Para a partição de sistema: <code>mkfs.ext4 /dev/sdax</code>;</li>
+</ul>
+<p>Agora é montar a partição de sistema recém formatada para podermos iniciar a instalação:</p>
+<div class="highlight"><pre><span></span># mount  /dev/sdax /mnt
+</pre></div>
+
+
+<p>E se for em sistema com boot EFI, não esquecer de montar a partição EFI:</p>
+<div class="highlight"><pre><span></span># mount /dev/sdax /efi
+</pre></div>
+
+
+<h2>Instalação</h2>
+<p>Primeiramente, vamos selecionar apenas os mirrors brasileiros em <code>/etc/pacman.d/mirrorlist</code> usando <code>sed</code>, fazendo um backup da lista original para <code>/etc/pacman.d/mirrorlist_old</code> com a opção <code>-i_old</code>:</p>
+<div class="highlight"><pre><span></span># sed -i_old -n &#39;/^## Brazil/,+1p&#39; /etc/pacman.d/mirrorlist
+</pre></div>
+
+
+<p>Então, instalar os pacotes básicos do sistema e os pacotes básicos para desenvolvimento (compiladores):</p>
+<div class="highlight"><pre><span></span># pacstrap /mnt base base-devel
+</pre></div>
+
+
+<p>Infelizmente, a instalação dessas bases não é tão mínima assim, ainda acaba instalando programas que não utilizamos mas fazer o quê...</p>
+<p>Daí gerar o arquivo <code>/etc/fstab</code> para ficar configurado nossas partições pro boot do sistema:</p>
+<div class="highlight"><pre><span></span># genfstab -U /mnt &gt;&gt; /mnt/etc/fstab
+</pre></div>
+
+
+<p>E entrar no novo sistema, para configuração do sistema recém instalado.</p>
+<div class="highlight"><pre><span></span># arch-chroot /mnt
+</pre></div>
+
+
+<p>Ajustar o fuso horário:</p>
+<div class="highlight"><pre><span></span># ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+# hwclock --systohc
+</pre></div>
+
+
+<p>Editar o arquivo <code>/etc/locale.gen</code> e gerar o arquivo de idioma de configuração do sistema:</p>
+<div class="highlight"><pre><span></span># sed -i_old &#39;s/^#pt_BR/pt_BR/&#39; /etc/locale.gen
+# locale-gen
+# echo &#39;LANG=pt_BR.UTF-8&#39; &gt;&gt; /etc/locale.conf
+# echo &#39;KEYMAP=br-abnt&#39; &gt;&gt; /etc/vconsole.conf
+</pre></div>
+
+
+<p>Ajustar a rede para DHCP:</p>
+<div class="highlight"><pre><span></span># echo &#39;arch-pc&#39; &gt;&gt; /etc/hostname
+# echo &#39;127.0.0.1 localhost&#39; &gt;&gt; /etc/hosts
+# echo &#39;::1 localhost&#39; &gt;&gt; /etc/hosts
+# echo &#39;127.0.1.1 arch-pc.localdomain arch-pc&#39;
+# systemctl enable dhcpcd
+</pre></div>
+
+
+<p>Instalar as atualizações de microcode para processador :</p>
+<div class="highlight"><pre><span></span># pacman -S --noconfirm amd-ucode
+# pacman -S --noconfirm intel-ucode
+</pre></div>
+
+
+<p>Instalar o bootloader (para MBR):</p>
+<div class="highlight"><pre><span></span># pacman -S --noconfirm grub
+# grub-install --target=i386-pc /dev/sda
+# grub-mkconfig -o /boot/grub/grub.cfg
+</pre></div>
+
+
+<p>Para EFI:</p>
+<p>[TODO]</p>
+<p>Definir a senha para o root:</p>
+<div class="highlight"><pre><span></span># passwd
+</pre></div>
+
+
+<p>Então sair do chroot, desmontar as partições criadas e reiniciar:</p>
+<div class="highlight"><pre><span></span># exit
+# umount -R /mnt
+# reboot
+</pre></div>
+
+
+<h2>Pós-Instalação</h2>
+<p>Bom agora é ajustar o sistema para uso. Como shell, eu gosto do fish porque já vem com padrões bem agradáveis.</p>
+<div class="highlight"><pre><span></span># pacman -S --noconfirm fish
+</pre></div>
+
+
+<p>Daí, seguimos para a criação do usuário normal, para não ficar usando o sistema em root:</p>
+<div class="highlight"><pre><span></span># useradd -m -G wheel -s /usr/bin/fish rafael
+# passwd rafael
+</pre></div>
+
+
+<p>Não esquecer de editar o arquivo <code>/etc/sudoers</code> para liberar o <code>sudo</code> para usuários do grupo <code>wheel</code>. Geralmente, apenas removendo o comentário da linha com <code>%wheel ALL=(ALL) ALL</code>, mas customizar o arquivo de acordo com suas preferências.</p>
+    <footer class="article_info">
+      <summary>Informações do artigo:</summary>
+      <p><time class="published" datetime="2019-06-15T00:00:00-03:00">
+        Publicado em: sáb 15 junho 2019
+      </time></p>
+      <address class="vcard author">
+        Autor:             <a href="/author/rafael-fernandes.html">Rafael Fernandes</a>
+      </address>
+      <p class="category">
+          Categoria: <a href="/category/notas.html">Notas</a>
+      </p>
+      <p class="tags">
+          Tags:
+              <a href="/tag/linux.html">Linux</a>
+              <a href="/tag/arch.html">Arch</a>
+      </p>
+      <p class="extrainfo">Permalink: <a href="/drafts/archlinux_install.html">/drafts/archlinux_install.html</a></p>
+    </footer><!-- /.post-info -->
+  </article>
+</main>
+
+  <footer id="site_footer" class="background">
+    <p>
+      <a href="http://twitter.com/ragatol" rel="bookmark"><img src="https://twitter.com/favicon.ico"> twitter</a> 
+      <a href="http://github.com/ragatol" rel="bookmark"><img src="https://github.com/favicon.ico"> github</a>
+    </p>
+    <p>&copy; 2016 Rafael Fernandes</p>
+  </footer><!-- /#contentinfo -->
+</body>
+</html>
